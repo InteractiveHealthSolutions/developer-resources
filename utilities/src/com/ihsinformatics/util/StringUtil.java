@@ -9,7 +9,7 @@ You can also access the license on the internet at the address: http://www.gnu.o
 Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors. */
 package com.ihsinformatics.util;
 
-import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * This class contains several methods for String manupulation that are not
@@ -19,11 +19,39 @@ import java.util.ArrayList;
  *
  */
 public class StringUtil {
-    public static ArrayList<String> toArrayList(String[] array) {
-	ArrayList<String> arrayList = new ArrayList<String>(array.length);
-	for (String s : array)
-	    arrayList.add(s);
-	return arrayList;
+
+    public StringUtil() {
     }
 
+    /**
+     * Generates a random string of given length
+     * 
+     * @param length
+     * @param numeric
+     *            : when true, 0-9 will be included in the string
+     * @param alpha
+     *            : when true, A-Z will be included in the string
+     * @param caseSensitive
+     *            : when true, A-Z and a-z will be included in the string
+     * @return
+     */
+    public String randomString(int length, boolean numeric, boolean alpha,
+	    boolean caseSensitive) {
+	String characters = "";
+	if (numeric) {
+	    characters = "0123456789";
+	}
+	if (alpha) {
+	    characters += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	    if (caseSensitive) {
+		characters += "abcdefghijklmnopqrstuvwxyz";
+	    }
+	}
+	Random rand = new Random();
+	char[] text = new char[length];
+	for (int i = 0; i < length; i++) {
+	    text[i] = characters.charAt(rand.nextInt(characters.length()));
+	}
+	return new String(text);
+    }
 }

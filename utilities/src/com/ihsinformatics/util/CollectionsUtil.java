@@ -23,10 +23,23 @@ import java.util.List;
 /**
  * This utility provides helping methods for Collections and Data structures
  * 
- * @author Owais
+ * @author owais.hussain@ihsinformatics.com
  *
  */
 public class CollectionsUtil {
+
+    /**
+     * Converts an array of Strings into an ArrayList object
+     * 
+     * @param array
+     * @return
+     */
+    public static ArrayList<String> toArrayList(String[] array) {
+	ArrayList<String> arrayList = new ArrayList<String>(array.length);
+	for (String s : array)
+	    arrayList.add(s);
+	return arrayList;
+    }
 
     /**
      * Casts a List into given class and returns
