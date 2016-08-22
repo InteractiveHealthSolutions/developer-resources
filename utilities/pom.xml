@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ihsinformatics</groupId>
 	<artifactId>utilities</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<name>Common Utilities</name>
 	<description>Common programming utility classes</description>
 	<build>
@@ -31,6 +31,11 @@
 			<artifactId>junit</artifactId>
 			<version>4.8.2</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.6</version>
 		</dependency>
 	</dependencies>
 </project>
