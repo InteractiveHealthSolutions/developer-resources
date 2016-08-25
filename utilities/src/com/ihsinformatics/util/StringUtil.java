@@ -42,9 +42,9 @@ public class StringUtil {
 	    characters = "0123456789";
 	}
 	if (alpha) {
-	    characters += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	    characters += "ACEFGHIJKLOQRSTUVWXYZ";
 	    if (caseSensitive) {
-		characters += "abcdefghijklmnopqrstuvwxyz";
+		characters += "acefghijkloqrstuvwxyz";
 	    }
 	}
 	Random rand = new Random();
