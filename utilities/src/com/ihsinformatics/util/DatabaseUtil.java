@@ -398,7 +398,8 @@ public final class DatabaseUtil {
 	    throws InstantiationException, IllegalAccessException,
 	    ClassNotFoundException {
 	String command = "INSERT INTO " + destinationTableName + " SELECT "
-		+ columnList + " FROM " + sourceTableName + " " + arrangeFilter(filter);
+		+ columnList + " FROM " + sourceTableName + " "
+		+ arrangeFilter(filter);
 	String s = this.runCommand(CommandType.INSERT, command).toString();
 	return Integer.parseInt(s);
     }
@@ -519,7 +520,8 @@ public final class DatabaseUtil {
 	    throws SQLException {
 	long result = -1;
 	try {
-	    String command = "SELECT COUNT(*) FROM " + tableName + " " + arrangeFilter(filter);
+	    String command = "SELECT COUNT(*) FROM " + tableName + " "
+		    + arrangeFilter(filter);
 	    String s = this.runCommand(CommandType.SELECT, command).toString();
 	    result = Long.parseLong(s);
 	} catch (Exception e) {
@@ -583,8 +585,12 @@ public final class DatabaseUtil {
     }
 
     private String arrangeFilter(String filter) {
-	if (filter.trim().equalsIgnoreCase(""))
+	if (filter == null) {
 	    return "";
+	}
+	if (filter.trim().equalsIgnoreCase("")) {
+	    return "";
+	}
 	return (filter.toUpperCase().contains("WHERE") ? "" : " where ")
 		+ filter;
     }
@@ -600,10 +606,27 @@ public final class DatabaseUtil {
      *            Filter to set criteria to read record Like "WHERE ID = 100"
      * @return 2 dimensional Array of Objects containing records
      */
-
-    @SuppressWarnings("unchecked")
     public Object[][] getTableData(String tableName, String columnList,
 	    String filter) {
+	return getTableData(tableName, columnList, filter, false);
+    }
+
+    /**
+     * Get a set of records from database
+     * 
+     * @param tableName
+     *            Table name where data exists
+     * @param columnList
+     *            Comma separated list of columns Like "ID,FirstName,LastName"
+     * @param filter
+     *            Filter to set criteria to read record Like "WHERE ID = 100"
+     * @param distinct
+     *            If true, only unique record set will be returned
+     * @return 2 dimensional Array of Objects containing records
+     */
+    @SuppressWarnings("unchecked")
+    public Object[][] getTableData(String tableName, String columnList,
+	    String filter, boolean distinct) {
 	// 2 Dimensional Object array to hold the table data
 	Object[][] data;
 	// Array list of array lists to record data during transaction
@@ -611,8 +634,9 @@ public final class DatabaseUtil {
 	try {
 	    this.openConnection();
 	    Statement st = con.createStatement();
-	    String command = "SELECT " + columnList + " FROM " + tableName
-		    + " " + arrangeFilter(filter);
+	    String command = "SELECT " + (distinct ? "DISTINCT " : "")
+		    + columnList + " FROM " + tableName + " "
+		    + arrangeFilter(filter);
 	    ResultSet rs = st.executeQuery(command);
 	    // Get the number of columns
 	    int columns = rs.getMetaData().getColumnCount();
@@ -737,7 +761,8 @@ public final class DatabaseUtil {
 	    mapping.append(columns[i] + " = '" + values[i] + "', ");
 	}
 	mapping.deleteCharAt(mapping.lastIndexOf(","));
-	String command = "UPDATE " + tableName + " SET A = B " + arrangeFilter(filter);
+	String command = "UPDATE " + tableName + " SET A = B "
+		+ arrangeFilter(filter);
 	return this.runCommand(CommandType.UPDATE, command);
     }
 
