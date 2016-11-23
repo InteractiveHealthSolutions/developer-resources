@@ -9,6 +9,8 @@ You can also access the license on the internet at the address: http://www.gnu.o
 Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors. */
 package com.ihsinformatics.util;
 
+import java.util.ArrayList;
+
 /**
  * Regular Expression provider class to verify a valid expression (e.g. valid email address, name, etc.)
  Characters:
@@ -104,6 +106,8 @@ public class RegexUtil {
     public static final String alphaNumPattern = "^[A-Za-z0-9]+";
     public static final String emailPattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     public static final String contactNoPattern = "^[\\+|0][0-9\\s-]+";
+    //public static final String contactNoPattern = "^\\+(?:[0-9] ?){6,14}[0-9]$";
+    //public static final String contactNoPattern = "^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$";
     public static final String datePattern = "(0[1-9]|[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012]|[1-9])[-/](19|20)\\d{2}";
     public static final String timePattern_am_pm = "(1[012]|[1-9]):[0-5][0-9](\\s)?(?i)(am|pm)";
     public static final String sqlDate = "^([0-9]{2,4})-([0-1][0-9])-([0-3][0-9])";
@@ -175,7 +179,20 @@ public class RegexUtil {
      */
     public static boolean isContactNumber(String string) {
 	try {
-	    return string.matches(contactNoPattern);
+	    boolean valid = string.matches(contactNoPattern);;
+	    if (string.contains("-")) {
+		    String array[] = string.split("-");
+		    for (String temp : array) {
+			try {
+			    if (Integer.parseInt(temp) == 0) {
+				valid = false;
+				break;
+			    }
+			} catch (NumberFormatException e) {
+			}
+		    }
+	    }
+	    return valid;
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return false;

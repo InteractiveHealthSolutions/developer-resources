@@ -55,7 +55,7 @@ public class RegexUtilTest {
     @Test
     public final void testIsContactNumber() {
 	String[] rightNumbers = {"03452345345", "+923452345345", "0345-2345345", "0345 2345345", "+92-345-2345345"};
-	String[] wrongNumbers = {"00-3452345345", "+92055alpha55", "99#255689", "*55554444889"};
+	String[] wrongNumbers = {"0092-00-356-9887", "00-3452345345", "+92055alpha55", "99#255689", "*55554444889"};
 	for (String num : rightNumbers)
 	    assertTrue(num + " is valid phone number but rejected", RegexUtil.isContactNumber(num));
 	for (String num : wrongNumbers)
