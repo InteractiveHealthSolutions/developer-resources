@@ -15,15 +15,15 @@ public class MainClass {
 
     public static void main(String[] args) {
 	String str = "2016-01-02";
-	boolean matches = str.matches(RegexUtil.sqlDate);
+	boolean matches = str.matches(RegexUtil.SQL_DATE);
 	System.out.println(matches);
 	
 	str = "13:30:00";
-	matches = str.matches(RegexUtil.sqlTime);
+	matches = str.matches(RegexUtil.SQL_TIME);
 	System.out.println(matches);
 
 	str = "2016-01-02 12:30:00";
-	matches = str.matches(RegexUtil.sqlDateTime);
+	matches = str.matches(RegexUtil.SQL_DATETIME);
 	System.out.println(matches);
     }
 }

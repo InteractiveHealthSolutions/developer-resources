@@ -9,7 +9,6 @@ You can also access the license on the internet at the address: http://www.gnu.o
 Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors. */
 package com.ihsinformatics.util;
 
-import java.util.ArrayList;
 
 /**
  * Regular Expression provider class to verify a valid expression (e.g. valid email address, name, etc.)
@@ -100,25 +99,20 @@ import java.util.ArrayList;
  * 
  */
 public class RegexUtil {
-    public static final String numericPattern = "^[0-9]+";
-    public static final String floatingPointPattern = "^[0-9]+.{0,1}[0-9]*";
-    public static final String alphaPattern = "^[A-Za-z_ ]+";
-    public static final String alphaNumPattern = "^[A-Za-z0-9]+";
-    public static final String emailPattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    public static final String contactNoPattern = "^[\\+|0][0-9\\s-]+";
-    //public static final String contactNoPattern = "^\\+(?:[0-9] ?){6,14}[0-9]$";
-    //public static final String contactNoPattern = "^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$";
-    public static final String datePattern = "(0[1-9]|[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012]|[1-9])[-/](19|20)\\d{2}";
-    public static final String timePattern_am_pm = "(1[012]|[1-9]):[0-5][0-9](\\s)?(?i)(am|pm)";
-    public static final String sqlDate = "^([0-9]{2,4})-([0-1][0-9])-([0-3][0-9])";
-    public static final String sqlTime = "^([0-2][0-9]):([0-5][0-9]):([0-5][0-9])?$";
-    public static final String sqlDateTime = "^([0-9]{2,4})-([0-1][0-9])-([0-3][0-9])(?:( [0-2][0-9]):([0-5][0-9]):([0-5][0-9]))?$";
-    public static final String timePattern_24 = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
-    public static final String nicPattern = "^[0-9]{5,5}[-.]{0,1}[0-9]{7,7}[-.]{0,1}[0-9]";
-    public static final String urlPattern = "^(((ht|f)tp(s?))\\:\\/\\/)?(localhost|([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5]|.){3}([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])|(www.|[a-zA-Z].)[a-zA-Z0-9\\-\\.]+\\.(com|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk|pk|co|))(\\:[0-9]+)*(\\/($|[a-zA-Z0-9\\.\\,\\;\\?\\\\'\\\\\\\\\\\\+&amp;%\\\\$#\\\\=~_\\\\-]+))*$";
-    public static final String smsPattern = "[A-Z0-9]{2,2}[0-9]{9,9} [0-3][0-9](JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)20[1-3][0-9] [YN]";
-
-    public static final int idLength = 14;
+    public static final String INTEGER = "^[0-9]+";
+    public static final String DECIMAL = "^[0-9]+.{0,1}[0-9]*";
+    public static final String ALPHABETS = "^[A-Za-z_ ]+";
+    public static final String ALPHA_NUMERIC = "^[A-Za-z0-9]+";
+    public static final String EMAIL = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    public static final String CONTACT_NO = "^[\\+|0][0-9\\s-]+";
+    public static final String DATE = "(0[1-9]|[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012]|[1-9])[-/](19|20)\\d{2}";
+    public static final String TIME_AM_PM = "(1[012]|[1-9]):[0-5][0-9](\\s)?(?i)(am|pm)";
+    public static final String TIME_24HR = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
+    public static final String SQL_DATE = "^([0-9]{2,4})-([0-1][0-9])-([0-3][0-9])";
+    public static final String SQL_TIME = "^([0-2][0-9]):([0-5][0-9]):([0-5][0-9])?$";
+    public static final String SQL_DATETIME = "^([0-9]{2,4})-([0-1][0-9])-([0-3][0-9])(?:( [0-2][0-9]):([0-5][0-9]):([0-5][0-9]))?$";
+    public static final String CNIC = "^[0-9]{5,5}[-.]{0,1}[0-9]{7,7}[-.]{0,1}[0-9]";
+    public static final String URL = "^(((ht|f)tp(s?))\\:\\/\\/)?(localhost|([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5]|.){3}([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])|(www.|[a-zA-Z].)[a-zA-Z0-9\\-\\.]+\\.(com|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk|pk|co|))(\\:[0-9]+)*(\\/($|[a-zA-Z0-9\\.\\,\\;\\?\\\\'\\\\\\\\\\\\+&amp;%\\\\$#\\\\=~_\\\\-]+))*$";
 
     /**
      * Checks if given input is a valid number
@@ -130,8 +124,8 @@ public class RegexUtil {
     public static boolean isNumeric(String string, boolean floating) {
 	try {
 	    if (floating)
-		return string.matches(floatingPointPattern);
-	    return string.matches(numericPattern);
+		return string.matches(DECIMAL);
+	    return string.matches(INTEGER);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return false;
@@ -147,7 +141,7 @@ public class RegexUtil {
      */
     public static boolean isWord(String string) {
 	try {
-	    return string.matches(alphaPattern);
+	    return string.matches(ALPHABETS);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return false;
@@ -163,7 +157,7 @@ public class RegexUtil {
      */
     public static boolean isAlphaNumeric(String string) {
 	try {
-	    return string.matches(alphaNumPattern);
+	    return string.matches(ALPHA_NUMERIC);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return false;
@@ -179,7 +173,7 @@ public class RegexUtil {
      */
     public static boolean isContactNumber(String string) {
 	try {
-	    boolean valid = string.matches(contactNoPattern);;
+	    boolean valid = string.matches(CONTACT_NO);;
 	    if (string.contains("-")) {
 		    String array[] = string.split("-");
 		    for (String temp : array) {
@@ -208,7 +202,7 @@ public class RegexUtil {
      */
     public static boolean isEmailAddress(String string) {
 	try {
-	    return string.matches(emailPattern);
+	    return string.matches(EMAIL);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return false;
@@ -224,7 +218,7 @@ public class RegexUtil {
      */
     public static boolean isValidDate(String string) {
 	try {
-	    return string.matches(datePattern);
+	    return string.matches(DATE);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return false;
@@ -241,8 +235,8 @@ public class RegexUtil {
     public static boolean isValidTime(String string, boolean am_pm) {
 	try {
 	    if (am_pm)
-		return string.matches(timePattern_am_pm);
-	    return string.matches(timePattern_24);
+		return string.matches(TIME_AM_PM);
+	    return string.matches(TIME_24HR);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return false;
@@ -258,7 +252,7 @@ public class RegexUtil {
      */
     public static boolean isValidNIC(String string) {
 	try {
-	    return string.matches(nicPattern);
+	    return string.matches(CNIC);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return false;
@@ -274,23 +268,7 @@ public class RegexUtil {
      */
     public static boolean isValidURL(String string) {
 	try {
-	    return string.matches(urlPattern);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    return false;
-	}
-    }
-
-    /**
-     * Checks if given input is valid according to acceptable SMS format
-     * 
-     * @param string
-     * 
-     * @return true/false
-     */
-    public static boolean isValidSMS(String string) {
-	try {
-	    return string.matches(smsPattern);
+	    return string.matches(URL);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return false;
@@ -306,7 +284,6 @@ public class RegexUtil {
      */
     public static boolean isValidId(String id) {
 	boolean isValid = true;
-	isValid = id.length() == idLength;
 	id = id.replaceAll("\\W", "");
 	// Validate Luhn check digit
 	// TODO: Replace with isValidCheckDigit() method

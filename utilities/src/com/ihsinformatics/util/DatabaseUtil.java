@@ -156,8 +156,12 @@ public final class DatabaseUtil {
      * @return User name
      */
 
-    public String getUser() {
+    public String getUsername() {
 	return userName;
+    }
+    
+    public String getPassword() {
+	return password;
     }
 
     /**
