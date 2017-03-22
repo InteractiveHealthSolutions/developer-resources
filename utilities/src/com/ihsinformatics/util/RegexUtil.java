@@ -9,7 +9,6 @@ You can also access the license on the internet at the address: http://www.gnu.o
 Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors. */
 package com.ihsinformatics.util;
 
-
 /**
  * Regular Expression provider class to verify a valid expression (e.g. valid email address, name, etc.)
  Characters:
@@ -99,7 +98,7 @@ package com.ihsinformatics.util;
  * 
  */
 public class RegexUtil {
-    public static final String INTEGER = "^[0-9]+";
+    public static final String INTEGER = "^[-]{0,1}[0-9]+";
     public static final String DECIMAL = "^[0-9]+.{0,1}[0-9]*";
     public static final String ALPHABETS = "^[A-Za-z_ ]+";
     public static final String ALPHA_NUMERIC = "^[A-Za-z0-9]+";
@@ -113,6 +112,7 @@ public class RegexUtil {
     public static final String SQL_DATETIME = "^([0-9]{2,4})-([0-1][0-9])-([0-3][0-9])(?:( [0-2][0-9]):([0-5][0-9]):([0-5][0-9]))?$";
     public static final String CNIC = "^[0-9]{5,5}[-.]{0,1}[0-9]{7,7}[-.]{0,1}[0-9]";
     public static final String URL = "^(((ht|f)tp(s?))\\:\\/\\/)?(localhost|([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5]|.){3}([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])|(www.|[a-zA-Z].)[a-zA-Z0-9\\-\\.]+\\.(com|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk|pk|co|))(\\:[0-9]+)*(\\/($|[a-zA-Z0-9\\.\\,\\;\\?\\\\'\\\\\\\\\\\\+&amp;%\\\\$#\\\\=~_\\\\-]+))*$";
+    public static final String TEXT = "^(a-zA-Z0-9@\\-#\\.\\(\\)\\/%&\\s)";
 
     /**
      * Checks if given input is a valid number
@@ -173,18 +173,19 @@ public class RegexUtil {
      */
     public static boolean isContactNumber(String string) {
 	try {
-	    boolean valid = string.matches(CONTACT_NO);;
+	    boolean valid = string.matches(CONTACT_NO);
+	    ;
 	    if (string.contains("-")) {
-		    String array[] = string.split("-");
-		    for (String temp : array) {
-			try {
-			    if (Integer.parseInt(temp) == 0) {
-				valid = false;
-				break;
-			    }
-			} catch (NumberFormatException e) {
+		String array[] = string.split("-");
+		for (String temp : array) {
+		    try {
+			if (Integer.parseInt(temp) == 0) {
+			    valid = false;
+			    break;
 			}
+		    } catch (NumberFormatException e) {
 		    }
+		}
 	    }
 	    return valid;
 	} catch (Exception e) {
@@ -269,6 +270,23 @@ public class RegexUtil {
     public static boolean isValidURL(String string) {
 	try {
 	    return string.matches(URL);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    return false;
+	}
+    }
+
+    /**
+     * Checks if given input is valid as open-text. This includes all
+     * alphanumeric, digits and common special characters
+     * 
+     * @param string
+     *            input String
+     * @return true/false
+     */
+    public static boolean isValidOpenText(String string) {
+	try {
+	    return string.matches(TEXT);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return false;

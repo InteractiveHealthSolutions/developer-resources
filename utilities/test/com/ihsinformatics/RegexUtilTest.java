@@ -30,6 +30,22 @@ public class RegexUtilTest {
      */
     @Test
     public final void testIsNumeric() {
+	String[] validIntegers = {"0", "1", "9999", "-9999"};
+	String[] invalidIntegers = {"-0", "1.5", "2e14"};
+	String[] validFloat = {"0", "1", "9999", "-9999", "0.0", "1.1", "99.99", "-99.99"};
+	String[] invalidFloat = {"-0.0", "1..5", ".55"};
+	for (String s : validIntegers) {
+	    assertTrue(s + " is valid but rejected", RegexUtil.isNumeric(s, false));
+	}
+	for (String s : invalidIntegers) {
+	    assertFalse(s + " is invalid but accepted", RegexUtil.isNumeric(s, false));
+	}
+	for (String s : validFloat) {
+	    assertTrue(s + " is valid but rejected", RegexUtil.isNumeric(s, true));
+	}
+	for (String s : invalidFloat) {
+	    assertFalse(s + " is invalid but accepted", RegexUtil.isNumeric(s, true));
+	}
     }
 
     /**
@@ -125,5 +141,13 @@ public class RegexUtilTest {
      */
     @Test
     public final void testIsValidCheckDigit() {
+    }
+    
+    /**
+     * Test method for
+     * {@link com.ihsinformatics.util.RegexUtil#isValidOpenText(java.lang.String)}.
+     */
+    @Test
+    public final void testIsValidOpenText() {
     }
 }
