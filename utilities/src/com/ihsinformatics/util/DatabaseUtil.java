@@ -73,11 +73,17 @@ public final class DatabaseUtil {
     }
 
     /**
-     * JDBC Connection getter
+     * JDBC Connection getter. Opens the connection first
      * 
      * @return Connection
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
      */
-    public Connection getConnection() {
+    public Connection getConnection() throws InstantiationException,
+	    IllegalAccessException, ClassNotFoundException, SQLException {
+	this.openConnection();
 	return con;
     }
 
@@ -159,7 +165,7 @@ public final class DatabaseUtil {
     public String getUsername() {
 	return userName;
     }
-    
+
     public String getPassword() {
 	return password;
     }
@@ -183,13 +189,12 @@ public final class DatabaseUtil {
 
     /**
      * Close connection
+     * 
+     * @throws SQLException
      */
 
-    private void closeConnection() {
-	try {
-	    con.close();
-	} catch (Exception e) {
-	}
+    private void closeConnection() throws SQLException {
+	con.close();
     }
 
     /**
@@ -753,11 +758,11 @@ public final class DatabaseUtil {
      * @throws ClassNotFoundException
      * @throws IllegalAccessException
      * @throws InstantiationException
+     * @throws SQLException
      */
-
     public Object updateRecord(String tableName, String[] columns,
 	    String[] values, String filter) throws InstantiationException,
-	    IllegalAccessException, ClassNotFoundException {
+	    IllegalAccessException, ClassNotFoundException, SQLException {
 	if (columns.length != values.length)
 	    return false;
 	StringBuilder mapping = new StringBuilder();
@@ -765,27 +770,47 @@ public final class DatabaseUtil {
 	    mapping.append(columns[i] + " = '" + values[i] + "', ");
 	}
 	mapping.deleteCharAt(mapping.lastIndexOf(","));
-	String command = "UPDATE " + tableName + " SET A = B "
+	String command = "UPDATE " + tableName + " SET " + mapping
 		+ arrangeFilter(filter);
 	return this.runCommand(CommandType.UPDATE, command);
     }
 
     /**
-     * Run any SQL command within allowed command types
+     * Run any SQL command within allowed command types. Does not throw any
+     * exception
      * 
      * @param type
      *            Type of Command to be run Like "INSERT"
      * @param command
      *            Command Text Like "DROP TABLE MyTable"
      * @return
+     */
+    public Object runCommand(CommandType type, String command) {
+	try {
+	    return runCommandWithException(type, command);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return null;
+    }
+
+    /**
+     * Run any SQL command within allowed command types. Does not throw any
+     * exception
+     * 
+     * @param type
+     *            Type of Command to be run Like "INSERT"
+     * @param command
+     *            Command Text Like "DROP TABLE MyTable"
+     * @return
+     * @throws SQLException
      * @throws ClassNotFoundException
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-
-    public Object runCommand(CommandType type, String command)
-	    throws InstantiationException, IllegalAccessException,
-	    ClassNotFoundException {
+    public Object runCommandWithException(CommandType type, String command)
+	    throws SQLException, InstantiationException,
+	    IllegalAccessException, ClassNotFoundException {
 	Object obj = new Object();
 	try {
 	    this.openConnection();
@@ -815,11 +840,9 @@ public final class DatabaseUtil {
 		obj = rs.getObject(1);
 		break;
 	    }
-	} catch (SQLException e) {
-	    e.printStackTrace();
-	    obj = "false";
+	} finally {
+	    this.closeConnection();
 	}
-	this.closeConnection();
 	return obj;
     }
 }
