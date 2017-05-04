@@ -14,16 +14,15 @@ package com.ihsinformatics.util;
 public class MainClass {
 
     public static void main(String[] args) {
-	String str = "2016-01-02";
-	boolean matches = str.matches(RegexUtil.SQL_DATE);
-	System.out.println(matches);
 	
-	str = "13:30:00";
-	matches = str.matches(RegexUtil.SQL_TIME);
-	System.out.println(matches);
-
-	str = "2016-01-02 12:30:00";
-	matches = str.matches(RegexUtil.SQL_DATETIME);
-	System.out.println(matches);
+	int m = 8, n = 16, r = 1;
+	do {
+	    r = m % n;
+	    if (r == 0) {
+		System.out.println(n);
+	    }
+	    m = n;
+	    n = r;
+	} while (r != 0);
     }
 }

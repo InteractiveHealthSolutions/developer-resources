@@ -24,6 +24,24 @@ public class StringUtil {
     }
 
     /**
+     * Concatenates an array of Strings into single string
+     * 
+     * @param array
+     * @param separator
+     *            the string to be inserted between two concatenations, passing
+     *            null or empty string will insert nothing
+     * @return
+     */
+    public static String concatenate(String[] array, String separator) {
+	StringBuffer string = new StringBuffer();
+	for (String s : array) {
+	    string.append(s);
+	    string.append(separator == null ? "" : separator);
+	}
+	return string.toString();
+    }
+
+    /**
      * Generates a random string of given length
      * 
      * @param length

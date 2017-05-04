@@ -214,6 +214,35 @@ public final class DatabaseUtil {
     }
 
     /**
+     * Fetch data from source database and insert into target database
+     * 
+     * @param selectQuery
+     * @param insertQuery
+     * @param sourceConnection
+     * @param targetConnection
+     * @throws SQLException
+     */
+    public static void remoteSelectInsert(String selectQuery,
+	    String insertQuery, DatabaseUtil sourceConnection,
+	    DatabaseUtil targetConnection) throws SQLException,
+	    InstantiationException, IllegalAccessException,
+	    ClassNotFoundException {
+	PreparedStatement source = sourceConnection.getConnection()
+		.prepareStatement(selectQuery);
+	PreparedStatement target = targetConnection.getConnection()
+		.prepareStatement(insertQuery);
+	ResultSet data = source.executeQuery();
+	ResultSetMetaData metaData = data.getMetaData();
+	while (data.next()) {
+	    for (int i = 1; i <= metaData.getColumnCount(); i++) {
+		String value = data.getString(i);
+		target.setString(i, value);
+	    }
+	    target.executeUpdate();
+	}
+    }
+
+    /**
      * Create a new database
      * 
      * @param databaseName
@@ -263,7 +292,6 @@ public final class DatabaseUtil {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-
     public String[] getTableNames() throws InstantiationException,
 	    IllegalAccessException, ClassNotFoundException, SQLException {
 	List<String> ls = new ArrayList<String>();
@@ -275,10 +303,31 @@ public final class DatabaseUtil {
 	    ls.add(rs.getString("TABLE_NAME"));
 	    con.close();
 	}
-	String[] tableNames = new String[ls.size()];
-	for (int i = 0; i < ls.size(); i++)
-	    tableNames[i] = ls.get(i);
-	return tableNames;
+	return ls.toArray(new String[] {});
+    }
+
+    /**
+     * Retrieve column names of given table name in the current Database
+     * 
+     * @param tableName
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
+    public String[] getColumnNames(String tableName)
+	    throws InstantiationException, IllegalAccessException,
+	    ClassNotFoundException, SQLException {
+	List<String> ls = new ArrayList<String>();
+	this.openConnection();
+	Statement st = con.createStatement();
+	ResultSet rset = st.executeQuery("SELECT * FROM " + tableName + " WHERE 1 = 0");
+	ResultSetMetaData md = rset.getMetaData();
+	for (int i = 1; i <= md.getColumnCount(); i++) {
+	    ls.add(md.getColumnLabel(i));
+	}
+	return ls.toArray(new String[] {});
     }
 
     /**
