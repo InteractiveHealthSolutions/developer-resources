@@ -99,4 +99,21 @@ public class CollectionsUtil {
 	}
 	return null;
     }
+
+    /**
+     * Search for any object in given list
+     * 
+     * @param list
+     * @param item
+     * @return
+     */
+    public static <T> List<T> search(List<T> list, Object item) {
+	List<T> r = new ArrayList<T>();
+	for (T t : list) {
+	    if (t.hashCode() == item.hashCode()) {
+		r.add(t);
+	    }
+	}
+	return r;
+    }
 }

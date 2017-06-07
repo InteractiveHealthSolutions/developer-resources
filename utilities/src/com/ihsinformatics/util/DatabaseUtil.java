@@ -322,7 +322,8 @@ public final class DatabaseUtil {
 	List<String> ls = new ArrayList<String>();
 	this.openConnection();
 	Statement st = con.createStatement();
-	ResultSet rset = st.executeQuery("SELECT * FROM " + tableName + " WHERE 1 = 0");
+	ResultSet rset = st.executeQuery("SELECT * FROM " + tableName
+		+ " WHERE 1 = 0");
 	ResultSetMetaData md = rset.getMetaData();
 	for (int i = 1; i <= md.getColumnCount(); i++) {
 	    ls.add(md.getColumnLabel(i));
@@ -682,9 +683,21 @@ public final class DatabaseUtil {
      *            If true, only unique record set will be returned
      * @return 2 dimensional Array of Objects containing records
      */
-    @SuppressWarnings("unchecked")
     public Object[][] getTableData(String tableName, String columnList,
 	    String filter, boolean distinct) {
+	String command = "SELECT " + (distinct ? "DISTINCT " : "") + columnList
+		+ " FROM " + tableName + " " + arrangeFilter(filter);
+	return getTableData(command);
+    }
+
+    /**
+     * Get a set of records from database
+     * 
+     * @param command
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public Object[][] getTableData(String command) {
 	// 2 Dimensional Object array to hold the table data
 	Object[][] data;
 	// Array list of array lists to record data during transaction
@@ -692,9 +705,6 @@ public final class DatabaseUtil {
 	try {
 	    this.openConnection();
 	    Statement st = con.createStatement();
-	    String command = "SELECT " + (distinct ? "DISTINCT " : "")
-		    + columnList + " FROM " + tableName + " "
-		    + arrangeFilter(filter);
 	    ResultSet rs = st.executeQuery(command);
 	    // Get the number of columns
 	    int columns = rs.getMetaData().getColumnCount();
