@@ -76,42 +76,46 @@ public class StringUtil {
 	}
 	return new String(text);
     }
-    
+
     /**
-     * Generates all combinations of a given string, of given length and stores in output file
+     * Generates all combinations of a given string, of given length and stores
+     * in output file
+     * 
      * @param str
      * @param length
      * @param output
      * @throws IOException
      */
-    public void stringCombinations(String str, int length, File output) throws IOException {
+    public void stringCombinations(String str, int length, File output)
+	    throws IOException {
 	short bufferSize = 10000;
 	long n = 0;
 	ArrayList<String> list = new ArrayList<String>(bufferSize);
 	FileWriter writer = new FileWriter(output);
 	int total = ((Double) Math.pow(2, str.length())).intValue() - 1;
 	for (int i = 0; i < total; i++) {
-		String combination = "";
-		char[] charArray = new StringBuilder(Integer.toBinaryString(i)).toString().toCharArray();
-		for (int j = 0; j < charArray.length; j++)
-			if (charArray[j] == '0')
-				combination += str.charAt(j);
-		if (combination.length() == length) {
-			list.add(combination);				
-			n++;
+	    String combination = "";
+	    char[] charArray = new StringBuilder(Integer.toBinaryString(i))
+		    .toString().toCharArray();
+	    for (int j = 0; j < charArray.length; j++)
+		if (charArray[j] == '0')
+		    combination += str.charAt(j);
+	    if (combination.length() == length) {
+		list.add(combination);
+		n++;
+	    }
+	    // System.out.print(combination + " ");
+	    if (list.size() == bufferSize) {
+		System.out.println("Generated " + n + " combinations...");
+		for (String s : list) {
+		    writer.write(s + "\r\n");
 		}
-		// System.out.print(combination + " ");
-		if (list.size() == bufferSize) {
-			System.out.println("Generated " + n + " combinations...");
-			for (String s : list) {
-				writer.write(s + "\r\n");
-			}
-			writer.flush();
-			list = new ArrayList<String>();
-		}
+		writer.flush();
+		list = new ArrayList<String>();
+	    }
 	}
 	for (String s : list) {
-		writer.write(s + "\r\n");
+	    writer.write(s + "\r\n");
 	}
 	writer.flush();
 	writer.close();
