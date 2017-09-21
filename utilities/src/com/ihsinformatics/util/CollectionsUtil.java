@@ -15,10 +15,14 @@ Interactive Health Solutions, hereby disclaims all copyright interest in this pr
  */
 package com.ihsinformatics.util;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * This utility provides helping methods for Collections and Data structures
@@ -104,16 +108,111 @@ public class CollectionsUtil {
      * Search for any object in given list
      * 
      * @param list
-     * @param item
+     * @param obj
      * @return
      */
-    public static <T> List<T> search(List<T> list, Object item) {
+    public static <T> List<T> search(List<T> list, Object obj) {
 	List<T> r = new ArrayList<T>();
 	for (T t : list) {
-	    if (t.hashCode() == item.hashCode()) {
+	    if (t.hashCode() == obj.hashCode()) {
 		r.add(t);
 	    }
 	}
 	return r;
+    }
+
+    /**
+     * Limit property name provided to specified depth of hierarchy. For
+     * example, if child property of object A contains B and B contains C, then
+     * limiting to depth 0 will nullify child of A; limiting to depth 1 will
+     * keep B in A but will nullify C in child of B
+     * 
+     * @param obj
+     * @param depth
+     * @return
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws SecurityException
+     * @throws NoSuchFieldException
+     */
+    public static Object restrictNestedProperties(Object obj, String property,
+	    int depth) throws IllegalArgumentException, IllegalAccessException,
+	    NoSuchFieldException, SecurityException {
+	Field field = obj.getClass().getDeclaredField(property);
+	field.setAccessible(true);
+	if (depth == 0) {
+	    field.set(obj, null);
+	} else if (depth == 1) {
+	    Object next = field.get(obj);
+	    field.set(next, null);
+	} else {
+	    Object next = field.get(obj);
+	    if (next != null) {
+		Object newNode = restrictNestedProperties(next, property,
+			depth - 1);
+		field.set(obj, newNode);
+	    }
+	}
+	return obj;
+    }
+
+    /**
+     * Search for cyclic objects within properties of input object and reduce
+     * the hierarchy to non-cyclic child nodes. For example, if A object has B,
+     * B has C and C has A, then A in C object will be nullified
+     * 
+     * @param obj
+     * @param fieldName
+     * @param identifyingField
+     * @param queue
+     * @return
+     * @throws NoSuchFieldException
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException
+     */
+    public static Object removeCyclicNodes(Object obj, String fieldName,
+	    String identifyingField, Queue<Object> queue)
+	    throws NoSuchFieldException, IllegalArgumentException,
+	    IllegalAccessException {
+	// Initialize queue if required
+	if (queue == null) {
+	    queue = new LinkedList<Object>();
+	}
+	Field field;
+	Field idField;
+	// Get field of given fieldName
+	field = obj.getClass().getDeclaredField(fieldName);
+	field.setAccessible(true);
+	// Get the value in the field
+	Object fieldValue = field.get(obj);
+	// If the value is null, then return
+	if (fieldValue == null) {
+	    return obj;
+	}
+	// Get field of field value of given fieldName
+	idField = fieldValue.getClass().getDeclaredField(identifyingField);
+	idField.setAccessible(true);
+	// If the value is equal to the object itself, then set null and return
+	if (idField.get(obj).equals(idField.get(fieldValue))) {
+	    field.set(fieldValue, null);
+	    return obj;
+	}
+	// Search the queue; if the value already exists in the queue, then set
+	// it null and return
+	for (Iterator<Object> iter = queue.iterator(); iter.hasNext();) {
+	    Object queueObj = iter.next();
+	    Object id1 = idField.get(obj);
+	    Object id2 = idField.get(queueObj);
+	    if (id1.equals(id2)) {
+		field.set(fieldValue, null);
+		return obj;
+	    }
+	}
+	// Enqueue the value and recursively call the method on the field
+	queue.add(obj);
+	Object next = removeCyclicNodes(fieldValue, fieldName,
+		identifyingField, queue);
+	field.set(obj, next);
+	return obj;
     }
 }
