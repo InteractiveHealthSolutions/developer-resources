@@ -79,9 +79,27 @@ public class CollectionsUtil {
      * @param outputClass
      * @return
      */
+    @Deprecated
     public static <T> ArrayList<T> convert(String[] values, Class<T> outputClass) {
 	ArrayList<T> converted = new ArrayList<T>();
 	for (String s : values) {
+	    converted.add(convert(s, outputClass));
+	}
+	return converted;
+    }
+
+    /**
+     * Converts an array of String values into an ArrayList of specified class.
+     * The values unconvertible are returned as null, but exception is printed
+     * on console
+     * 
+     * @param values
+     * @param outputClass
+     * @return
+     */
+    public static <T> ArrayList<T> convert(Object[] values, Class<T> outputClass) {
+	ArrayList<T> converted = new ArrayList<T>();
+	for (Object s : values) {
 	    converted.add(convert(s, outputClass));
 	}
 	return converted;
