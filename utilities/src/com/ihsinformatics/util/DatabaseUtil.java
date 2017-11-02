@@ -9,6 +9,7 @@ You can also access the license on the internet at the address: http://www.gnu.o
 Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors. */
 package com.ihsinformatics.util;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -19,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class to perform some common JDBC Operations
@@ -903,5 +905,35 @@ public final class DatabaseUtil {
 	    this.closeConnection();
 	}
 	return obj;
+    }
+
+    /**
+     * Executes stored procedure
+     * 
+     * @param procedureName
+     * @param params
+     *            pass null if not applicable
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
+    public void runStoredProcedure(String procedureName,
+	    Map<String, Object> params) throws InstantiationException,
+	    IllegalAccessException, ClassNotFoundException, SQLException {
+	try {
+	    this.openConnection();
+	    CallableStatement statement = con.prepareCall(procedureName);
+	    // Check whether parameters are provided or not
+	    if (params != null) {
+		for (String param : params.keySet()) {
+		    statement.setObject(param, params.get(param));
+		}
+	    }
+	    // Execute stored procedure
+	    statement.execute();
+	} finally {
+	    this.closeConnection();
+	}
     }
 }

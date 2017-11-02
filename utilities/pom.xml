@@ -6,6 +6,8 @@
 	<version>1.2.5</version>
 	<name>Common Utilities</name>
 	<description>Common programming utility classes</description>
+	<url>http://www.ihsinformatics.com</url>
+	<licenses></licenses>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
@@ -38,4 +40,13 @@
 			<version>1.6</version>
 		</dependency>
 	</dependencies>
+	<organization>
+		<name>Interactive Health Solutions</name>
+		<url>http://www.ihsinformatics.com</url>
+	</organization>
+	<scm>
+		<url>scm:git:https://git.ihsinformatics.com/team-leaders/developer-resources.git</url>
+		<developerConnection>scm:git:https://git.ihsinformatics.com/team-leaders/developer-resources.git</developerConnection>
+		<tag>developers-resources</tag>
+	</scm>
 </project>
