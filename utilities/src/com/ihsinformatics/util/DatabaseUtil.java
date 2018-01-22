@@ -18,7 +18,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +42,7 @@ public final class DatabaseUtil {
      * Default constructor
      */
     public DatabaseUtil() {
-	this.setConnection("", "", "", "", "");
+	setConnection("", "", "", "", "");
     }
 
     /**
@@ -54,7 +56,7 @@ public final class DatabaseUtil {
      */
     public DatabaseUtil(String url, String dbName, String driverName,
 	    String userName, String password) {
-	this.setConnection(url, dbName, driverName, userName, password);
+	setConnection(url, dbName, driverName, userName, password);
     }
 
     /**
@@ -75,7 +77,8 @@ public final class DatabaseUtil {
     }
 
     /**
-     * JDBC Connection getter. Opens the connection first
+     * JDBC Connection getter. Opens the connection; if one is already open, it
+     * is closed first
      * 
      * @return Connection
      * @throws SQLException
@@ -85,7 +88,7 @@ public final class DatabaseUtil {
      */
     public Connection getConnection() throws InstantiationException,
 	    IllegalAccessException, ClassNotFoundException, SQLException {
-	this.openConnection();
+	openConnection();
 	return con;
     }
 
@@ -183,9 +186,12 @@ public final class DatabaseUtil {
 
     private void openConnection() throws InstantiationException,
 	    IllegalAccessException, ClassNotFoundException, SQLException {
-	Class.forName(driverName).newInstance();
-	con = DriverManager.getConnection(this.url, this.userName,
-		this.password);
+	try {
+	    closeConnection();
+	} catch (Exception e) {
+	}
+	Class.forName(driverName);
+	con = DriverManager.getConnection(url, userName, password);
 	con.setCatalog(dbName);
     }
 
@@ -207,11 +213,16 @@ public final class DatabaseUtil {
 
     public boolean tryConnection() {
 	try {
-	    this.openConnection();
-	    con.close();
+	    openConnection();
 	    return true;
 	} catch (Exception e) {
 	    return false;
+	} finally {
+	    try {
+		con.close();
+	    } catch (SQLException e) {
+		e.printStackTrace();
+	    }
 	}
     }
 
@@ -229,10 +240,10 @@ public final class DatabaseUtil {
 	    DatabaseUtil targetConnection) throws SQLException,
 	    InstantiationException, IllegalAccessException,
 	    ClassNotFoundException {
-	PreparedStatement source = sourceConnection.getConnection()
-		.prepareStatement(selectQuery);
-	PreparedStatement target = targetConnection.getConnection()
-		.prepareStatement(insertQuery);
+	Connection sourceConn = sourceConnection.getConnection();
+	Connection targetConn = targetConnection.getConnection();
+	PreparedStatement source = sourceConn.prepareStatement(selectQuery);
+	PreparedStatement target = targetConn.prepareStatement(insertQuery);
 	ResultSet data = source.executeQuery();
 	ResultSetMetaData metaData = data.getMetaData();
 	while (data.next()) {
@@ -242,6 +253,10 @@ public final class DatabaseUtil {
 	    }
 	    target.executeUpdate();
 	}
+	source.close();
+	target.close();
+	sourceConn.close();
+	targetConn.close();
     }
 
     /**
@@ -258,7 +273,7 @@ public final class DatabaseUtil {
 	    throws InstantiationException, IllegalAccessException,
 	    ClassNotFoundException {
 	String command = "CREATE DATABASE " + databaseName;
-	return this.runCommand(CommandType.CREATE, command);
+	return runCommand(CommandType.CREATE, command);
     }
 
     /**
@@ -276,10 +291,10 @@ public final class DatabaseUtil {
 	    throws InstantiationException, IllegalAccessException,
 	    ClassNotFoundException {
 	String command = "USE " + databaseName;
-	Object obj = this.runCommand(CommandType.USE, command);
+	Object obj = runCommand(CommandType.USE, command);
 	if (obj.toString() == "true") {
 	    command = "DROP DATABASE " + databaseName;
-	    return this.runCommand(CommandType.DROP, command);
+	    return runCommand(CommandType.DROP, command);
 	} else {
 	    return false;
 	}
@@ -297,14 +312,15 @@ public final class DatabaseUtil {
     public String[] getTableNames() throws InstantiationException,
 	    IllegalAccessException, ClassNotFoundException, SQLException {
 	List<String> ls = new ArrayList<String>();
-	this.openConnection();
+	openConnection();
 	DatabaseMetaData dbm = con.getMetaData();
 	String[] types = { "TABLE" };
 	ResultSet rs = dbm.getTables(null, null, "%", types);
 	while (rs.next()) {
 	    ls.add(rs.getString("TABLE_NAME"));
-	    con.close();
 	}
+	rs.close();
+	closeConnection();
 	return ls.toArray(new String[] {});
     }
 
@@ -322,14 +338,16 @@ public final class DatabaseUtil {
 	    throws InstantiationException, IllegalAccessException,
 	    ClassNotFoundException, SQLException {
 	List<String> ls = new ArrayList<String>();
-	this.openConnection();
+	openConnection();
 	Statement st = con.createStatement();
-	ResultSet rset = st.executeQuery("SELECT * FROM " + tableName
+	ResultSet rs = st.executeQuery("SELECT * FROM " + tableName
 		+ " WHERE 1 = 0");
-	ResultSetMetaData md = rset.getMetaData();
+	ResultSetMetaData md = rs.getMetaData();
 	for (int i = 1; i <= md.getColumnCount(); i++) {
 	    ls.add(md.getColumnLabel(i));
 	}
+	rs.close();
+	closeConnection();
 	return ls.toArray(new String[] {});
     }
 
@@ -349,7 +367,7 @@ public final class DatabaseUtil {
 	    ClassNotFoundException {
 	String command = "ALTER TABLE " + tableName + " ADD UNIQUE ("
 		+ columnName + ")";
-	return this.runCommand(CommandType.CREATE, command);
+	return runCommand(CommandType.CREATE, command);
     }
 
     /**
@@ -372,7 +390,7 @@ public final class DatabaseUtil {
 	    IllegalAccessException, ClassNotFoundException {
 	String command = "CREATE TABLE " + newTableName + " (" + firstColumn
 		+ " " + sqlDataType + ")";
-	String s = this.runCommand(CommandType.CREATE, command).toString();
+	String s = runCommand(CommandType.CREATE, command).toString();
 	return Boolean.parseBoolean(s);
     }
 
@@ -389,7 +407,7 @@ public final class DatabaseUtil {
     public Object deleteTable(String tableName) throws InstantiationException,
 	    IllegalAccessException, ClassNotFoundException {
 	String command = "DROP TABLE " + tableName;
-	String s = this.runCommand(CommandType.DROP, command).toString();
+	String s = runCommand(CommandType.DROP, command).toString();
 	return Boolean.parseBoolean(s);
     }
 
@@ -409,7 +427,7 @@ public final class DatabaseUtil {
     public int copyTable(String sourceTableName, String destinationTableName)
 	    throws InstantiationException, IllegalAccessException,
 	    ClassNotFoundException {
-	return this.copyTable(sourceTableName, "*", destinationTableName);
+	return copyTable(sourceTableName, "*", destinationTableName);
     }
 
     /**
@@ -431,8 +449,7 @@ public final class DatabaseUtil {
     public int copyTable(String sourceTableName, String columnList,
 	    String destinationTableName) throws InstantiationException,
 	    IllegalAccessException, ClassNotFoundException {
-	return this.copyTable(sourceTableName, columnList,
-		destinationTableName, "");
+	return copyTable(sourceTableName, columnList, destinationTableName, "");
     }
 
     /**
@@ -461,7 +478,7 @@ public final class DatabaseUtil {
 	String command = "INSERT INTO " + destinationTableName + " SELECT "
 		+ columnList + " FROM " + sourceTableName + " "
 		+ arrangeFilter(filter);
-	String s = this.runCommand(CommandType.INSERT, command).toString();
+	String s = runCommand(CommandType.INSERT, command).toString();
 	return Integer.parseInt(s);
     }
 
@@ -479,7 +496,7 @@ public final class DatabaseUtil {
 	    throws InstantiationException, IllegalAccessException,
 	    ClassNotFoundException {
 	String command = "TRUNCATE TABLE " + tableName;
-	return this.runCommand(CommandType.TRUNCATE, command);
+	return runCommand(CommandType.TRUNCATE, command);
     }
 
     /**
@@ -502,7 +519,7 @@ public final class DatabaseUtil {
 	    IllegalAccessException, ClassNotFoundException {
 	String command = "ALTER TABLE " + tableName + " ADD " + columnName
 		+ " " + sqlDataType;
-	return this.runCommand(CommandType.ALTER, command);
+	return runCommand(CommandType.ALTER, command);
     }
 
     /**
@@ -527,7 +544,7 @@ public final class DatabaseUtil {
 	    IllegalAccessException, ClassNotFoundException {
 	String command = "ALTER TABLE " + tableName + " CHANGE " + columnName
 		+ " " + newName + " " + newDataType;
-	return Boolean.parseBoolean(this.runCommand(CommandType.ALTER, command)
+	return Boolean.parseBoolean(runCommand(CommandType.ALTER, command)
 		.toString());
     }
 
@@ -546,7 +563,7 @@ public final class DatabaseUtil {
 	    throws InstantiationException, IllegalAccessException,
 	    ClassNotFoundException {
 	String command = "ALTER TABLE " + tableName + " DROP " + columnName;
-	return this.runCommand(CommandType.ALTER, command);
+	return runCommand(CommandType.ALTER, command);
     }
 
     /**
@@ -559,7 +576,7 @@ public final class DatabaseUtil {
     public long getTotalRows(String tableName) {
 	long result = 0;
 	try {
-	    result = this.getTotalRows(tableName, "");
+	    result = getTotalRows(tableName, "");
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	}
@@ -583,7 +600,7 @@ public final class DatabaseUtil {
 	try {
 	    String command = "SELECT COUNT(*) FROM " + tableName + " "
 		    + arrangeFilter(filter);
-	    String s = this.runCommand(CommandType.SELECT, command).toString();
+	    String s = runCommand(CommandType.SELECT, command).toString();
 	    result = Long.parseLong(s);
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -603,7 +620,7 @@ public final class DatabaseUtil {
      */
 
     public Object[] getRecord(String tableName, String filter) {
-	return this.getRecord(tableName, "*", filter);
+	return getRecord(tableName, "*", filter);
     }
 
     /**
@@ -619,12 +636,11 @@ public final class DatabaseUtil {
      *            Filter to set criteria to read record Like "WHERE ID = 100"
      * @return Array of Objects containing record
      */
-
     public Object[] getRecord(String tableName, String columnList, String filter) {
 	Object[] record;
 	ArrayList<Object> array = new ArrayList<Object>();
 	try {
-	    this.openConnection();
+	    openConnection();
 	    Statement st = con.createStatement();
 	    String command = "SELECT " + columnList + " FROM " + tableName
 		    + " " + arrangeFilter(filter) + " LIMIT 1";
@@ -637,14 +653,52 @@ public final class DatabaseUtil {
 		    array.add(o);
 		}
 	    }
-	    this.closeConnection();
+	    rs.close();
 	} catch (Exception e) {
 	    e.printStackTrace();
+	} finally {
+	    try {
+		closeConnection();
+	    } catch (SQLException e) {
+		e.printStackTrace();
+	    }
 	}
 	record = array.toArray();
 	return record;
     }
 
+    /**
+     * Get a single value as string from given select command. The result is
+     * null in case of exception
+     * 
+     * @param command
+     * @return
+     */
+    public String getValue(String command) {
+	String str = null;
+	try {
+	    openConnection();
+	    Statement st = con.createStatement();
+	    ResultSet rs = st.executeQuery(command);
+	    rs.next();
+	    str = rs.getString(1);
+	    rs.close();
+	} catch (Exception e) {
+	} finally {
+	    try {
+		closeConnection();
+	    } catch (SQLException e) {
+	    }
+	}
+	return str;
+    }
+
+    /**
+     * Construct where clause
+     * 
+     * @param filter
+     * @return
+     */
     private String arrangeFilter(String filter) {
 	if (filter == null) {
 	    return "";
@@ -705,7 +759,7 @@ public final class DatabaseUtil {
 	// Array list of array lists to record data during transaction
 	ArrayList<ArrayList<Object>> array = new ArrayList<ArrayList<Object>>();
 	try {
-	    this.openConnection();
+	    openConnection();
 	    Statement st = con.createStatement();
 	    ResultSet rs = st.executeQuery(command);
 	    // Get the number of columns
@@ -728,9 +782,15 @@ public final class DatabaseUtil {
 		// Copy record into table
 		data[i] = fieldList.toArray();
 	    }
-	    this.closeConnection();
+	    rs.close();
 	} catch (Exception e) {
 	    data = null;
+	} finally {
+	    try {
+		closeConnection();
+	    } catch (SQLException e) {
+		e.printStackTrace();
+	    }
 	}
 	return data;
     }
@@ -755,7 +815,7 @@ public final class DatabaseUtil {
 	    ClassNotFoundException {
 	String command = "INSERT INTO " + tableName + "(" + columns
 		+ ") VALUES (" + values + ")";
-	return this.runCommand(CommandType.INSERT, command);
+	return runCommand(CommandType.INSERT, command);
     }
 
     /**
@@ -782,7 +842,7 @@ public final class DatabaseUtil {
 		    "[a-zA-Z]*[a-zA-Z]", "?");
 	    String command = "INSERT INTO " + tableName + " (" + columns
 		    + ") VALUES (" + comm + ")";
-	    this.openConnection();
+	    openConnection();
 	    PreparedStatement st = con.prepareStatement(command);
 	    for (int i = 0; i < values.length; i++) {
 		String[] strings = values[i].split(",");
@@ -792,7 +852,7 @@ public final class DatabaseUtil {
 		st.addBatch();
 	    }
 	    int[] results = st.executeBatch();
-	    this.closeConnection();
+	    closeConnection();
 	    for (int i : results) {
 		result += i;
 	    }
@@ -833,7 +893,7 @@ public final class DatabaseUtil {
 	mapping.deleteCharAt(mapping.lastIndexOf(","));
 	String command = "UPDATE " + tableName + " SET " + mapping
 		+ arrangeFilter(filter);
-	return this.runCommand(CommandType.UPDATE, command);
+	return runCommand(CommandType.UPDATE, command);
     }
 
     /**
@@ -874,7 +934,7 @@ public final class DatabaseUtil {
 	    IllegalAccessException, ClassNotFoundException {
 	Object obj = new Object();
 	try {
-	    this.openConnection();
+	    openConnection();
 	    Statement st = con.createStatement();
 	    switch (type) {
 	    case ALTER:
@@ -895,14 +955,14 @@ public final class DatabaseUtil {
 		obj = st.executeUpdate(command);
 		break;
 	    case SELECT:
-		this.openConnection();
 		ResultSet rs = st.executeQuery(command);
 		rs.next();
 		obj = rs.getObject(1);
+		rs.close();
 		break;
 	    }
 	} finally {
-	    this.closeConnection();
+	    closeConnection();
 	}
 	return obj;
     }
@@ -922,18 +982,39 @@ public final class DatabaseUtil {
 	    Map<String, Object> params) throws InstantiationException,
 	    IllegalAccessException, ClassNotFoundException, SQLException {
 	try {
-	    this.openConnection();
-	    CallableStatement statement = con.prepareCall(procedureName);
+	    openConnection();
+	    String paramString = "(";
+	    if (params != null) {
+		for (int i = 0; i < params.size(); i++) {
+		    paramString += "?,";
+		}
+		paramString = paramString
+			.substring(0, paramString.length() - 1);
+	    }
+	    paramString += ");";
+	    String query = "call " + procedureName + paramString;
+	    CallableStatement statement = con.prepareCall(query);
 	    // Check whether parameters are provided or not
 	    if (params != null) {
 		for (String param : params.keySet()) {
-		    statement.setObject(param, params.get(param));
+		    Object paramValue = params.get(param);
+		    if (paramValue != null) {
+			if (paramValue instanceof Date) {
+			    Date date = (Date) paramValue;
+			    statement.setTimestamp(param,
+				    new Timestamp(date.getTime()));
+			} else if (paramValue instanceof String) {
+			    statement.setString(param, paramValue.toString());
+			} else {
+			    statement.setObject(param, paramValue);
+			}
+		    }
 		}
 	    }
 	    // Execute stored procedure
 	    statement.execute();
 	} finally {
-	    this.closeConnection();
+	    closeConnection();
 	}
     }
 }
