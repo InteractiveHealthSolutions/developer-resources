@@ -292,7 +292,7 @@ public final class DatabaseUtil {
 	    ClassNotFoundException {
 	String command = "USE " + databaseName;
 	Object obj = runCommand(CommandType.USE, command);
-	if (obj.toString() == "true") {
+	if (obj.toString().equals("true")) {
 	    command = "DROP DATABASE " + databaseName;
 	    return runCommand(CommandType.DROP, command);
 	} else {
@@ -893,7 +893,7 @@ public final class DatabaseUtil {
 	mapping.deleteCharAt(mapping.lastIndexOf(","));
 	String command = "UPDATE " + tableName + " SET " + mapping
 		+ arrangeFilter(filter);
-	return runCommand(CommandType.UPDATE, command);
+	return runCommandWithException(CommandType.UPDATE, command);
     }
 
     /**
@@ -1016,5 +1016,10 @@ public final class DatabaseUtil {
 	} finally {
 	    closeConnection();
 	}
+    }
+
+    @Override
+    public String toString() {
+	return "URL: " + url + ", Schema:" + dbName + ", Username:" + userName;
     }
 }

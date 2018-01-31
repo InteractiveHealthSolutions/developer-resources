@@ -33,7 +33,7 @@ public class CsvUtil {
     public static void main(String[] args) {
 	CsvUtil csvUtil = new CsvUtil("res/Samples.csv", true);
 	String[][] data = csvUtil.readData();
-	System.out.println(data);
+	System.out.println(data.length);
     }
 
     public CsvUtil(String filePath) {

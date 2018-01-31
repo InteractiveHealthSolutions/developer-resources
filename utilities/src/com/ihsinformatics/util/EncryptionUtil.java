@@ -22,14 +22,14 @@ import javax.crypto.spec.SecretKeySpec;
  *
  */
 public class EncryptionUtil {
-    private static String KEY;
+    private String key;
 
     public EncryptionUtil() {
-	KEY = "MyAwesomeKey";
+	key = "MyAwesomeKey";
     }
 
     public EncryptionUtil(String key) {
-	EncryptionUtil.KEY = key;
+	this.key = key;
     }
 
     public static void main(String[] args) {
@@ -38,7 +38,7 @@ public class EncryptionUtil {
 	try {
 	    byte[] enc = obj.encrypt("she sells sea shell on the sea shore");
 	    String dec = obj.decrypt(enc);
-	    System.out.println(enc);
+	    System.out.println(String.valueOf(enc));
 	    System.out.println(dec);
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -47,7 +47,7 @@ public class EncryptionUtil {
 
     public byte[] encrypt(String message) throws Exception {
 	final MessageDigest md = MessageDigest.getInstance("md5");
-	final byte[] digestOfPassword = md.digest(KEY.getBytes("utf-8"));
+	final byte[] digestOfPassword = md.digest(key.getBytes("utf-8"));
 	final byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
 	for (int j = 0, k = 16; j < 8;) {
 	    keyBytes[k++] = keyBytes[j++];
@@ -63,7 +63,7 @@ public class EncryptionUtil {
 
     public String decrypt(byte[] message) throws Exception {
 	final MessageDigest md = MessageDigest.getInstance("md5");
-	final byte[] digestOfPassword = md.digest(KEY.getBytes("utf-8"));
+	final byte[] digestOfPassword = md.digest(key.getBytes("utf-8"));
 	final byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
 	for (int j = 0, k = 16; j < 8;) {
 	    keyBytes[k++] = keyBytes[j++];
