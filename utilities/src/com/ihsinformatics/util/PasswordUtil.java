@@ -16,7 +16,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.codec.binary.Base64;
-import org.junit.Assert;
 
 /**
  * This class provides password generating utilities. Be wise when selecting the
@@ -219,9 +218,11 @@ public class PasswordUtil {
      *            password/salt value. Defaults to 1.
      */
     public void setIterations(int iterations) {
-	Assert.assertTrue("Iterations value must be greater than zero",
-		iterations > 0);
-	this.iterations = iterations;
+	if (iterations < 1) {
+	    iterations = 1;
+	} else {
+	    this.iterations = iterations;
+	}
     }
 
     /**
