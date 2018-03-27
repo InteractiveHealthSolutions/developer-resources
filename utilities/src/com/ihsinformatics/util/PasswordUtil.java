@@ -14,8 +14,8 @@ package com.ihsinformatics.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
 
 /**
@@ -125,7 +125,7 @@ public class PasswordUtil {
 	for (int i = 1; i < this.iterations; i++) {
 	    digest = messageDigest.digest(digest);
 	}
-	byte[] encoded = Base64.getEncoder().encode(digest);
+	byte[] encoded = Base64.encodeBase64(digest);
 	return Utf8.decode(encoded);
     }
 
