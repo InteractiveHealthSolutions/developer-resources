@@ -16,8 +16,11 @@ import java.security.NoSuchAlgorithmException;
  * This class provides hashing functionality
  * 
  * @author owais.hussain@ihsinformatics.com
+ * @deprecated because of limited use of MD5 algorithm only. Recommended
+ *             alternative is PasswordUtil
  * 
  */
+@Deprecated
 public final class MDHashUtil {
     /**
      * Get Hash code of given string

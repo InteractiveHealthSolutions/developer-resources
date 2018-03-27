@@ -36,15 +36,26 @@ public class EncryptionUtil {
 	// no change
 	EncryptionUtil obj = new EncryptionUtil("AllDayIDreamAboutCode");
 	try {
-	    byte[] enc = obj.encrypt("she sells sea shell on the sea shore");
-	    String dec = obj.decrypt(enc);
-	    System.out.println(String.valueOf(enc));
+	    byte[] enc = obj.encrypt("c1267d24-3188-11e8-9b75-0a0027000002");
+	    byte[] encFromStr = new String(enc).getBytes();
+	    String dec = obj.decrypt(encFromStr);
+	    for (byte b : encFromStr) {
+		System.out.print(b + ", ");
+	    }
+	    System.out.println("\n" + new String(enc));
 	    System.out.println(dec);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
     }
 
+    /**
+     * Encrypt given message using DESede algorithm
+     * 
+     * @param message
+     * @return
+     * @throws Exception
+     */
     public byte[] encrypt(String message) throws Exception {
 	final MessageDigest md = MessageDigest.getInstance("md5");
 	final byte[] digestOfPassword = md.digest(key.getBytes("utf-8"));
@@ -61,6 +72,13 @@ public class EncryptionUtil {
 	return cipherText;
     }
 
+    /**
+     * Decrypt given encrypted message using DESede algorithm and key
+     * 
+     * @param message
+     * @return
+     * @throws Exception
+     */
     public String decrypt(byte[] message) throws Exception {
 	final MessageDigest md = MessageDigest.getInstance("md5");
 	final byte[] digestOfPassword = md.digest(key.getBytes("utf-8"));
