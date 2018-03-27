@@ -81,6 +81,10 @@ public class PasswordUtil {
 	return salt;
     }
 
+    public void setSalt(String salt) {
+	this.salt = salt;
+    }
+
     /**
      * Encrypts the salt using DESede encryption algorithm
      * 

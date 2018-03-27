@@ -30,15 +30,17 @@ import javax.crypto.spec.SecretKeySpec;
  * This class provides encryption and decryption utility
  * 
  * @author http://www.java2s.com
+ * @deprecated use PasswordUtil instead
  * 
  */
+@Deprecated
 public class SecurityUtil {
     private static final String HASHING_ALGORITHM = "SHA1";
     private static final String ENCRYPTION_ALGORITHM = "AES";
     private static final String CHARACTER_SET = "UTF-8";
     private static final String ENCRYPTION_KEY = "Tt3tr@NN!tr0Ttoluene";
     private static final int BLOCKS = 128;
-    
+
     /**
      * Compare the given hash and the given string-to-hash to see if they are
      * equal. The string-to-hash is usually of the form password + salt. <br/>
@@ -78,7 +80,8 @@ public class SecurityUtil {
      * @return the SHA-512 encryption of a given string
      * @should encode strings to 128 characters
      */
-    public static String encodeStringSHA512(String strToEncode) throws Exception {
+    public static String encodeStringSHA512(String strToEncode)
+	    throws Exception {
 	MessageDigest md;
 	byte[] input;
 	try {
@@ -88,8 +91,9 @@ public class SecurityUtil {
 	    throw new Exception(
 		    "System cannot find password encryption algorithm", e);
 	} catch (UnsupportedEncodingException e) {
-	    throw new Exception("System cannot find " + CHARACTER_SET
-		    + " CHARACTER_SET", e);
+	    throw new Exception(
+		    "System cannot find " + CHARACTER_SET + " CHARACTER_SET",
+		    e);
 	}
 	return hexString(md.digest(input));
     }
@@ -102,7 +106,8 @@ public class SecurityUtil {
      *            string to encode
      * @return the SHA-1 encryption of a given string
      */
-    private static String encodeStringSHA1(String strToEncode) throws Exception {
+    private static String encodeStringSHA1(String strToEncode)
+	    throws Exception {
 	MessageDigest md;
 	byte[] input;
 	try {
@@ -113,8 +118,9 @@ public class SecurityUtil {
 	    throw new Exception("System cannot find SHA1 encryption algorithm",
 		    e);
 	} catch (UnsupportedEncodingException e) {
-	    throw new Exception("System cannot find " + CHARACTER_SET
-		    + " CHARACTER_SET", e);
+	    throw new Exception(
+		    "System cannot find " + CHARACTER_SET + " CHARACTER_SET",
+		    e);
 	}
 	return hexString(md.digest(input));
     }
@@ -163,8 +169,9 @@ public class SecurityUtil {
 	    throw new Exception("System cannot find SHA1 encryption algorithm",
 		    e);
 	} catch (UnsupportedEncodingException e) {
-	    throw new Exception("System cannot find " + CHARACTER_SET
-		    + " CHARACTER_SET", e);
+	    throw new Exception(
+		    "System cannot find " + CHARACTER_SET + " CHARACTER_SET",
+		    e);
 	}
 	return incorrectHexString(md.digest(input));
     }
