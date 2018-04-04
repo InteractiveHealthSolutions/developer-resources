@@ -165,7 +165,7 @@ public class DateTimeUtil {
     }
 
     /**
-     * Returns the closed matching date format of given date as string
+     * Returns closest matching date format from given date in string
      * 
      * @param dateString
      * @return
@@ -177,6 +177,6 @@ public class DateTimeUtil {
 	    }
 	}
 	throw new InvalidParameterException(
-		"Given date does not match any of the standad conventions.");
+		"Given date does not match any of the standard conventions.");
     }
 }
