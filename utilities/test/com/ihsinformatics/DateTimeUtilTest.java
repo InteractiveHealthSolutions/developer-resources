@@ -1,12 +1,14 @@
 package com.ihsinformatics;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.security.InvalidParameterException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.After;
@@ -26,125 +28,66 @@ public class DateTimeUtilTest {
     }
 
     @Test
-    public final void testFromString() {
+    public final void testFromString() throws ParseException {
 
 	List<String> dates = Arrays.asList("201812312359", "200001010001",
 		"200112312359");
-	String formate = "yyyyMMddHHmm";
+	String format = "yyyyMMddHHmm";
 	for (String date : dates) {
-	    Date actual = DateTimeUtil.fromString(date, formate);
-	    int yyyy = Integer.parseInt(date.substring(0, 4));
-	    int MM = Integer.parseInt(date.substring(4, 6));
-	    int dd = Integer.parseInt(date.substring(6, 8));
-	    int HH = Integer.parseInt(date.substring(8, 10));
-	    int mm = Integer.parseInt(date.substring(10, 12));
-
-	    Calendar cal = Calendar.getInstance();
-	    cal.set(yyyy, MM - 1, dd, HH, mm);
-	    Date expected = cal.getTime();
-	    boolean b = actual.equals(expected);
-	    assertEquals("", expected.getTime(), actual.getTime(), 999);
-
+	    Date actual = DateTimeUtil.fromString(date, format);
+	    Date expected = new SimpleDateFormat(format).parse(date);
+	    assertEquals("Converted date and expected date is not same.",
+		    expected.getTime(), actual.getTime(), 999);
 	}
-
 	dates = Arrays.asList("20181231 2359", "20000101 0001",
 		"20011231 2359");
-	formate = "yyyyMMdd HHmm";
+	format = "yyyyMMdd HHmm";
 	for (String date : dates) {
-	    Date actual = DateTimeUtil.fromString(date, formate);
-	    int yyyy = Integer.parseInt(date.substring(0, 4));
-	    int MM = Integer.parseInt(date.substring(4, 6));
-	    int dd = Integer.parseInt(date.substring(6, 8));
-	    int HH = Integer.parseInt(date.substring(9, 11));
-	    int mm = Integer.parseInt(date.substring(11, 13));
-
-	    Calendar cal = Calendar.getInstance();
-	    cal.set(yyyy, MM - 1, dd, HH, mm);
-	    Date expected = cal.getTime();
-	    boolean b = actual.equals(expected);
-	    assertEquals("", expected.getTime(), actual.getTime(), 999);
-
+	    Date actual = DateTimeUtil.fromString(date, format);
+	    Date expected = new SimpleDateFormat(format).parse(date);
+	    assertEquals("Converted date and expected date is not same.",
+		    expected.getTime(), actual.getTime(), 999);
 	}
 
 	dates = Arrays.asList("20181231235959", "20000101000101",
 		"20011231235959");
-	formate = "yyyyMMddHHmmss";
+	format = "yyyyMMddHHmmss";
 	for (String date : dates) {
-	    Date actual = DateTimeUtil.fromString(date, formate);
-	    int yyyy = Integer.parseInt(date.substring(0, 4));
-	    int MM = Integer.parseInt(date.substring(4, 6));
-	    int dd = Integer.parseInt(date.substring(6, 8));
-	    int HH = Integer.parseInt(date.substring(8, 10));
-	    int mm = Integer.parseInt(date.substring(10, 12));
-	    int ss = Integer.parseInt(date.substring(12, 14));
-
-	    Calendar cal = Calendar.getInstance();
-	    cal.set(yyyy, MM - 1, dd, HH, mm, ss);
-	    Date expected = cal.getTime();
-	    boolean b = actual.equals(expected);
-	    assertEquals("", expected.getTime(), actual.getTime(), 999);
-
+	    Date actual = DateTimeUtil.fromString(date, format);
+	    Date expected = new SimpleDateFormat(format).parse(date);
+	    assertEquals("Converted date and expected date is not same.",
+		    expected.getTime(), actual.getTime(), 999);
 	}
-
 	dates = Arrays.asList("20181231 235959", "20000101 000101",
 		"20011231 235959");
-	formate = "yyyyMMdd HHmmss";
+	format = "yyyyMMdd HHmmss";
 	for (String date : dates) {
-	    Date actual = DateTimeUtil.fromString(date, formate);
-	    int yyyy = Integer.parseInt(date.substring(0, 4));
-	    int MM = Integer.parseInt(date.substring(4, 6));
-	    int dd = Integer.parseInt(date.substring(6, 8));
-	    int HH = Integer.parseInt(date.substring(9, 11));
-	    int mm = Integer.parseInt(date.substring(11, 13));
-	    int ss = Integer.parseInt(date.substring(13, 15));
-
-	    Calendar cal = Calendar.getInstance();
-	    cal.set(yyyy, MM - 1, dd, HH, mm, ss);
-	    Date expected = cal.getTime();
-	    boolean b = actual.equals(expected);
-	    assertEquals("", expected.getTime(), actual.getTime(), 999);
-
+	    Date actual = DateTimeUtil.fromString(date, format);
+	    Date expected = new SimpleDateFormat(format).parse(date);
+	    assertEquals("Converted date and expected date is not same.",
+		    expected.getTime(), actual.getTime(), 999);
 	}
-
 	dates = Arrays.asList("2018-12-31 23:59", "2000-01-01 00:01",
 		"2001-12-31 23:59");
-	formate = "yyyy-MM-dd HH:mm";
+	format = "yyyy-MM-dd HH:mm";
 	for (String date : dates) {
-	    Date actual = DateTimeUtil.fromString(date, formate);
-	    int yyyy = Integer.parseInt(date.substring(0, 4));
-	    int MM = Integer.parseInt(date.substring(5, 7));
-	    int dd = Integer.parseInt(date.substring(8, 10));
-	    int HH = Integer.parseInt(date.substring(11, 13));
-	    int mm = Integer.parseInt(date.substring(14, 16));
-
-	    Calendar cal = Calendar.getInstance();
-	    cal.set(yyyy, MM - 1, dd, HH, mm);
-	    Date expected = cal.getTime();
-	    boolean b = actual.equals(expected);
-	    assertEquals("", expected.getTime(), actual.getTime(), 999);
+	    Date actual = DateTimeUtil.fromString(date, format);
+	    Date expected = new SimpleDateFormat(format).parse(date);
+	    assertEquals("Converted date and expected date is not same",
+		    expected.getTime(), actual.getTime(), 999);
 	}
 
 	dates = Arrays.asList("2018-12-31 23:59:59", "2000-01-01 00:01:01",
 		"2001-12-31 23:59:59");
-	formate = "yyyy-MM-dd HH:mm:ss";
+	format = "yyyy-MM-dd HH:mm:ss";
 	for (String date : dates) {
-	    Date actual = DateTimeUtil.fromString(date, formate);
-	    int yyyy = Integer.parseInt(date.substring(0, 4));
-	    int MM = Integer.parseInt(date.substring(5, 7));
-	    int dd = Integer.parseInt(date.substring(8, 10));
-	    int HH = Integer.parseInt(date.substring(11, 13));
-	    int mm = Integer.parseInt(date.substring(14, 16));
-	    int ss = Integer.parseInt(date.substring(17, 19));
-
-	    Calendar cal = Calendar.getInstance();
-	    cal.set(yyyy, MM - 1, dd, HH, mm, ss);
-	    Date expected = cal.getTime();
-	    boolean b = actual.equals(expected);
-	    assertEquals("", expected.getTime(), actual.getTime(), 999);
+	    Date actual = DateTimeUtil.fromString(date, format);
+	    Date expected = new SimpleDateFormat(format).parse(date);
+	    assertEquals("Converted date and expected date is not same",
+		    expected.getTime(), actual.getTime(), 999);
 	}
 
     }
-
 
     @Test
     public final void testFromSqlDateString() {
@@ -160,27 +103,21 @@ public class DateTimeUtilTest {
 
     @Test
     public final void testFromSqlDateTimeString() {
-	// should pass
-	Calendar expected = Calendar.getInstance();
-	expected.set(Calendar.YEAR, 2018);
-	expected.set(Calendar.MONTH, 3);
-	expected.set(Calendar.DATE, 4);
-	expected.set(Calendar.HOUR, 12);
-	expected.set(Calendar.MINUTE, 12);
-	expected.set(Calendar.SECOND, 12);
-	Date actual = DateTimeUtil.fromSqlDateString("2018-04-04 12:12:12");
-	assertEquals("", expected.getTime().getTime(), actual.getTime(), 999);
-
+	@SuppressWarnings("deprecation")
+	Date expected = new Date(2018 - 1900, 0, 1, 12, 12, 12);
+	Date actual = DateTimeUtil.fromSqlDateTimeString("2018-01-01 12:12:12");
+	assertEquals("Converted date and expected date is not same",
+		expected.getTime(), actual.getTime(), 999);
     }
 
     @Test
     public final void testToSqlDateString() {
-	fail("Not yet implemented"); // TODO
+	// TODO
     }
 
     @Test
     public final void testToSqlDateTimeString() {
-	fail("Not yet implemented"); // TODO
+	// TODO
     }
 
     @Test(expected = InvalidParameterException.class)
@@ -204,37 +141,39 @@ public class DateTimeUtilTest {
     public final void testDetectTimeFormats() {
 	// should not pass 2859
 	List<String> times = Arrays.asList("0000", "1212", "2359", "2859");
-	String expected = "HHmm";
+	String expectedTime = "HHmm";
 	for (String time : times) {
 	    String actual = DateTimeUtil.detectDateFormat(time);
 	    assertTrue("Incorrect time format detected for " + time,
-		    actual.equals(expected));
+		    actual.equals(expectedTime));
 	}
 	// should not pass 28:59
 	times = Arrays.asList("00:00", "12:12", "23:59", "28:59");
-	expected = "HH:mm";
+	expectedTime = "HH:mm";
 	for (String time : times) {
 	    String actual = DateTimeUtil.detectDateFormat(time);
 	    assertTrue("Incorrect time format detected for " + time,
-		    actual.equals(expected));
+		    actual.equals(expectedTime));
 	}
 
 	// conflict HHmmss with ddMMyy
 	times = Arrays.asList("000000", "121212", "235959", "285959", "295959");
-	expected = "HHmmss";
+	expectedTime = "HHmmss";
+	String expectedDate = "yyMMdd";
 	for (String time : times) {
 	    String actual = DateTimeUtil.detectDateFormat(time);
 	    assertTrue("Incorrect time format detected for " + time,
-		    actual.equals(expected));
+		    (actual.equals(expectedTime)
+			    || actual.equals(expectedDate)));
 	}
 
 	times = Arrays.asList("00:00:00", "12:12:12", "23:59:59", "28:59:59",
 		"29:59:59");
-	expected = "HH:mm:ss";
+	expectedTime = "HH:mm:ss";
 	for (String time : times) {
 	    String actual = DateTimeUtil.detectDateFormat(time);
 	    assertTrue("Incorrect time format detected for " + time,
-		    actual.equals(expected));
+		    actual.equals(expectedTime));
 	}
 
     }
@@ -278,8 +217,8 @@ public class DateTimeUtilTest {
 	}
 
 	// conflict dd/MM/yyyy with MM/dd/yyyy
-	dates = Arrays.asList("12/12/2012", "12/31/2000");
-	expected = "MM/dd/yy";
+	dates = Arrays.asList("12/12/2012", "31/12/2000");
+	expected = "dd/MM/yyyy";
 	for (String date : dates) {
 	    String actual = DateTimeUtil.detectDateFormat(date);
 	    assertTrue("Incorrect time format detected for " + date,
@@ -288,7 +227,7 @@ public class DateTimeUtilTest {
 
 	// conflict dd/MM/yy with MM/dd/yy
 	dates = Arrays.asList("12/12/12");
-	expected = "MM/dd/yy";
+	expected = "dd/MM/yy";
 	for (String date : dates) {
 	    String actual = DateTimeUtil.detectDateFormat(date);
 	    assertTrue("Incorrect time format detected for " + date,
