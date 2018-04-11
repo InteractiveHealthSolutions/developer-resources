@@ -43,8 +43,8 @@ public class SecurityUtil {
 
     /**
      * Compare the given hash and the given string-to-hash to see if they are
-     * equal. The string-to-hash is usually of the form password + salt. <br/>
-     * <br/>
+     * equal. The string-to-hash is usually of the form password + salt.
+     * 
      * This should be used so that this class can compare against the new
      * correct hashing algorithm and the old incorrect hashin algorithm.
      * 
@@ -54,10 +54,9 @@ public class SecurityUtil {
      *            a string to encode/hash and compare to hashedPassword
      * @return true/false whether the two are equal
      * @throws Exception
-     * @should match strings hashed with incorrect sha1 algorithm
-     * @should match strings hashed with sha1 algorithm
-     * @should match strings hashed with sha512 algorithm and 128 characters
-     *         salt
+     *             should match strings hashed with incorrect sha1 algorithm
+     *             should match strings hashed with sha1 algorithm should match
+     *             strings hashed with sha512 algorithm and 128 characters salt
      */
     public static boolean hashMatches(String hashedPassword,
 	    String passwordToHash) throws Exception {
@@ -77,8 +76,8 @@ public class SecurityUtil {
      * 
      * @param strToEncode
      *            string to encode
-     * @return the SHA-512 encryption of a given string
-     * @should encode strings to 128 characters
+     * @return the SHA-512 encryption of a given string should encode strings to
+     *         128 characters
      */
     public static String encodeStringSHA512(String strToEncode)
 	    throws Exception {

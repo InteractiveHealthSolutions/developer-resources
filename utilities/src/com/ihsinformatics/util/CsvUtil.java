@@ -36,18 +36,39 @@ public class CsvUtil {
 	System.out.println(data.length);
     }
 
+    /**
+     * 
+     * @param filePath
+     */
     public CsvUtil(String filePath) {
 	init(filePath, ',', false);
     }
 
+    /**
+     * 
+     * @param filePath
+     * @param header
+     */
     public CsvUtil(String filePath, boolean header) {
 	init(filePath, ',', header);
     }
 
+    /**
+     * 
+     * @param filePath
+     * @param fieldSeparator
+     * @param header
+     */
     public CsvUtil(String filePath, char fieldSeparator, boolean header) {
 	init(filePath, fieldSeparator, header);
     }
 
+    /**
+     * 
+     * @param filePath
+     * @param fieldSeparator
+     * @param header
+     */
     private void init(String filePath, char fieldSeparator, boolean header) {
 	this.filePath = filePath;
 	this.fieldSeparator = fieldSeparator;
@@ -57,7 +78,7 @@ public class CsvUtil {
     /**
      * Returns column names in the header, if present
      * 
-     * @return
+     * @return array of strings as header
      */
     public String[] getHeader() {
 	if (header) {
@@ -66,8 +87,8 @@ public class CsvUtil {
 	    try {
 		FileInputStream fis = new FileInputStream(file);
 		DataInputStream dis = new DataInputStream(fis);
-		BufferedReader br = new BufferedReader(new InputStreamReader(
-			dis));
+		BufferedReader br = new BufferedReader(
+			new InputStreamReader(dis));
 		String strLine;
 		if ((strLine = br.readLine()) != null) {
 		    top = strLine;
@@ -84,7 +105,7 @@ public class CsvUtil {
     /**
      * If header is true, then returns data without header
      * 
-     * @return
+     * @return data as 2D array
      */
     public String[][] readData() {
 	String[] lines = readAllLines();
@@ -97,6 +118,10 @@ public class CsvUtil {
 	return data;
     }
 
+    /**
+     * 
+     * @return all text as string
+     */
     public String readAllText() {
 	StringBuilder sb = new StringBuilder();
 	for (String line : readAllLines()) {
@@ -105,6 +130,10 @@ public class CsvUtil {
 	return sb.toString();
     }
 
+    /**
+     * 
+     * @return array of strings (one per line)
+     */
     public String[] readAllLines() {
 	File file = new File(filePath);
 	ArrayList<String> lines = new ArrayList<String>();
@@ -123,6 +152,15 @@ public class CsvUtil {
 	return lines.toArray(new String[] {});
     }
 
+    /**
+     * Write CSV to file
+     * 
+     * @param data
+     *            : 2D array to write
+     * @param append
+     *            : whether to append data or not
+     * @return true or false
+     */
     public boolean writeCsv(String[][] data, boolean append) {
 	try {
 	    File file = new File(filePath);

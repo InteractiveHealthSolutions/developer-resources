@@ -198,11 +198,11 @@ public class PasswordUtil {
      * password after mixing in the salt and encoding that value
      *
      * @param passwordHash
-     *            encoded password
+     *            : encoded password
      * @param password
-     *            plain text password
+     *            : plain text password
      * @param salt
-     *            salt to mix into password
+     *            : salt to mix into password
      * @return true or false
      */
     public boolean match(String passwordHash, String password) {

@@ -82,8 +82,11 @@ public class StringUtil {
      * in output file
      * 
      * @param str
+     *            : the string to generate combinations for
      * @param length
+     *            : desired length of combinations
      * @param output
+     *            : file to write combinations to
      * @throws IOException
      */
     public void stringCombinations(String str, int length, File output)

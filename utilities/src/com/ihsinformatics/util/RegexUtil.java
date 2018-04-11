@@ -98,8 +98,8 @@ package com.ihsinformatics.util;
  * 
  */
 public class RegexUtil {
-    public static final String INTEGER = "^[-]{0,1}[0-9]+";
-    public static final String DECIMAL = "^[0-9]+.{0,1}[0-9]*";
+    public static final String INTEGER = "^[-]?[0-9]+";
+    public static final String DECIMAL = "^[-]?[0-9]+.{0,1}[0-9]*";
     public static final String ALPHABETS = "^[A-Za-z_ ]+";
     public static final String ALPHA_NUMERIC = "^[A-Za-z0-9]+";
     public static final String EMAIL = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -316,10 +316,10 @@ public class RegexUtil {
 			.length() - i - 1);
 		if (validChars.indexOf(ch) == -1)
 		    isValid = false;
-		int digit = (int) ch - 48;
+		int digit = ch - 48;
 		int weight;
 		if (i % 2 == 0) {
-		    weight = (2 * digit) - (int) (digit / 5) * 9;
+		    weight = (2 * digit) - digit / 5 * 9;
 		} else {
 		    weight = digit;
 		}
@@ -354,10 +354,10 @@ public class RegexUtil {
 		    - i - 1);
 	    if (validChars.indexOf(ch) == -1)
 		isValid = false;
-	    int digit = (int) ch - 48;
+	    int digit = ch - 48;
 	    int weight;
 	    if (i % 2 == 0) {
-		weight = (2 * digit) - (int) (digit / 5) * 9;
+		weight = (2 * digit) - digit / 5 * 9;
 	    } else {
 		weight = digit;
 	    }

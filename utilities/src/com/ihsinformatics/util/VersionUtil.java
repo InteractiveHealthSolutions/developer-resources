@@ -279,7 +279,8 @@ public class VersionUtil implements Comparable<VersionUtil> {
      * Two versions are compatible if their Major and Minor versions are same
      * 
      * @param version
-     * @return
+     *            : the version to check
+     * @return true of false
      */
     public boolean isCompatible(VersionUtil version) {
 	boolean result = false;
@@ -294,6 +295,10 @@ public class VersionUtil implements Comparable<VersionUtil> {
     /**
      * Returns 0 if both versions are same; 1 if version passed is ahead; -1 if
      * version passed is behind
+     * 
+     * @param version
+     *            : the version to compare
+     * @return number -1, 0, 1
      */
     @Override
     public int compareTo(VersionUtil version) {

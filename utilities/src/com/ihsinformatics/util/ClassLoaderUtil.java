@@ -45,9 +45,14 @@ public class ClassLoaderUtil {
      * </ul>
      *
      * @param resourceName
-     *            The name of the resources to load
+     *            : The name of the resources to load
      * @param callingClass
-     *            The Class object of the calling object
+     *            : The Class object of the calling object
+     * @param aggregate
+     *            : Whether to aggregate resources or not
+     * @return URL iterator
+     * @throws IOException
+     *             : if resource is inaccessible
      */
     public static Iterator<URL> getResources(String resourceName,
 	    Class<?> callingClass, boolean aggregate) throws IOException {
@@ -70,9 +75,9 @@ public class ClassLoaderUtil {
 	    }
 	}
 
-	if (!iterator.hasNext()
-		&& (resourceName != null)
-		&& ((resourceName.length() == 0) || (resourceName.charAt(0) != '/'))) {
+	if (!iterator.hasNext() && (resourceName != null)
+		&& ((resourceName.length() == 0)
+			|| (resourceName.charAt(0) != '/'))) {
 	    return getResources('/' + resourceName, callingClass, aggregate);
 	}
 
@@ -95,14 +100,15 @@ public class ClassLoaderUtil {
      *            resource to load
      * @param callingClass
      *            The Class object of the calling object
+     * @return URL as resource
      */
     public static URL getResource(String resourceName, Class<?> callingClass) {
 	URL url = Thread.currentThread().getContextClassLoader()
 		.getResource(resourceName);
 
 	if (url == null) {
-	    url = ClassLoaderUtil.class.getClassLoader().getResource(
-		    resourceName);
+	    url = ClassLoaderUtil.class.getClassLoader()
+		    .getResource(resourceName);
 	}
 
 	if (url == null) {
@@ -113,9 +119,9 @@ public class ClassLoaderUtil {
 	    }
 	}
 
-	if ((url == null)
-		&& (resourceName != null)
-		&& ((resourceName.length() == 0) || (resourceName.charAt(0) != '/'))) {
+	if ((url == null) && (resourceName != null)
+		&& ((resourceName.length() == 0)
+			|| (resourceName.charAt(0) != '/'))) {
 	    return getResource('/' + resourceName, callingClass);
 	}
 
@@ -131,6 +137,7 @@ public class ClassLoaderUtil {
      *            The name of the resource to load
      * @param callingClass
      *            The Class object of the calling object
+     * @return InputStream object
      */
     public static InputStream getResourceAsStream(String resourceName,
 	    Class<?> callingClass) {
@@ -158,6 +165,7 @@ public class ClassLoaderUtil {
      *            The name of the class to load
      * @param callingClass
      *            The Class object of the calling object
+     * @return Class object of callingClass
      * @throws ClassNotFoundException
      *             If the class cannot be found anywhere.
      */
@@ -171,8 +179,8 @@ public class ClassLoaderUtil {
 		return Class.forName(className);
 	    } catch (ClassNotFoundException ex) {
 		try {
-		    return ClassLoaderUtil.class.getClassLoader().loadClass(
-			    className);
+		    return ClassLoaderUtil.class.getClassLoader()
+			    .loadClass(className);
 		} catch (ClassNotFoundException exc) {
 		    return callingClass.getClassLoader().loadClass(className);
 		}
@@ -205,10 +213,12 @@ public class ClassLoaderUtil {
 	    return this;
 	}
 
+	@Override
 	public boolean hasNext() {
 	    return (next != null);
 	}
 
+	@Override
 	public E next() {
 	    if (next != null) {
 		E prev = next;
@@ -249,6 +259,7 @@ public class ClassLoaderUtil {
 
 	}
 
+	@Override
 	public void remove() {
 	    throw new UnsupportedOperationException();
 	}

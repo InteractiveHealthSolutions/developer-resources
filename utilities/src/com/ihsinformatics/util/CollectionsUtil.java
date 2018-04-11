@@ -36,7 +36,8 @@ public class CollectionsUtil {
      * Converts an array of Strings into an ArrayList object
      * 
      * @param array
-     * @return
+     *            : array to convert
+     * @return ArrayList of strings
      */
     public static ArrayList<String> toArrayList(String[] array) {
 	ArrayList<String> arrayList = new ArrayList<String>(array.length);
@@ -49,10 +50,13 @@ public class CollectionsUtil {
      * Casts a List into given class and returns
      * 
      * @param clazz
+     *            : class to cast
      * @param c
-     * @return
+     *            : collection
+     * @return List of objects casted into desired class
      */
-    public static <T> List<T> castList(Class<? extends T> clazz, Collection<?> c) {
+    public static <T> List<T> castList(Class<? extends T> clazz,
+	    Collection<?> c) {
 	List<T> r = new ArrayList<T>(c.size());
 	for (Object o : c)
 	    r.add(clazz.cast(o));
@@ -63,7 +67,8 @@ public class CollectionsUtil {
      * Sorts an array of String using Java's built-in Merge sort algorithm
      * 
      * @param list
-     * @return
+     *            : array of strings to sort
+     * @return array of sorted strings
      */
     public static String[] sortList(String[] list) {
 	Arrays.sort(list);
@@ -76,11 +81,14 @@ public class CollectionsUtil {
      * on console
      * 
      * @param values
+     *            : array of strings
      * @param outputClass
-     * @return
+     *            : class to convert into
+     * @return converted strings
      */
     @Deprecated
-    public static <T> ArrayList<T> convert(String[] values, Class<T> outputClass) {
+    public static <T> ArrayList<T> convert(String[] values,
+	    Class<T> outputClass) {
 	ArrayList<T> converted = new ArrayList<T>();
 	for (String s : values) {
 	    converted.add(convert(s, outputClass));
@@ -94,10 +102,13 @@ public class CollectionsUtil {
      * on console
      * 
      * @param values
+     *            : array of objects
      * @param outputClass
-     * @return
+     *            : class to convert into
+     * @return converted objects
      */
-    public static <T> ArrayList<T> convert(Object[] values, Class<T> outputClass) {
+    public static <T> ArrayList<T> convert(Object[] values,
+	    Class<T> outputClass) {
 	ArrayList<T> converted = new ArrayList<T>();
 	for (Object s : values) {
 	    converted.add(convert(s, outputClass));
@@ -109,13 +120,16 @@ public class CollectionsUtil {
      * Generally, convert an object of one class into another.
      * 
      * @param input
+     *            : input object
      * @param outputClass
-     * @return
+     *            : class to convert into
+     * @return converted object
      */
     public static <I, T> T convert(I input, Class<T> outputClass) {
 	try {
-	    return input == null ? null : outputClass.getConstructor(
-		    String.class).newInstance(input.toString());
+	    return input == null ? null
+		    : outputClass.getConstructor(String.class)
+			    .newInstance(input.toString());
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
@@ -126,8 +140,10 @@ public class CollectionsUtil {
      * Search for any object in given list
      * 
      * @param list
+     *            : List of objects
      * @param obj
-     * @return
+     *            : object to search
+     * @return object searched
      */
     public static <T> List<T> search(List<T> list, Object obj) {
 	List<T> r = new ArrayList<T>();
@@ -146,12 +162,18 @@ public class CollectionsUtil {
      * keep B in A but will nullify C in child of B
      * 
      * @param obj
+     *            : object to restrict properties of
      * @param depth
-     * @return
+     *            : level of search
+     * @return cleansed object
      * @throws IllegalAccessException
+     *             : on no access
      * @throws IllegalArgumentException
+     *             : on invalid arguments
      * @throws SecurityException
+     *             : on security blockage
      * @throws NoSuchFieldException
+     *             : on absence of a given property
      */
     public static Object restrictNestedProperties(Object obj, String property,
 	    int depth) throws IllegalArgumentException, IllegalAccessException,
@@ -180,13 +202,20 @@ public class CollectionsUtil {
      * B has C and C has A, then A in C object will be nullified
      * 
      * @param obj
+     *            : object to restrict properties of
      * @param fieldName
+     *            : property to remove
      * @param identifyingField
+     *            : identifying property
      * @param queue
-     * @return
-     * @throws NoSuchFieldException
-     * @throws IllegalArgumentException
+     *            : object queue
+     * @return cleansed object
      * @throws IllegalAccessException
+     *             : on no access
+     * @throws IllegalArgumentException
+     *             : on invalid arguments
+     * @throws NoSuchFieldException
+     *             : on absence of a given property
      */
     public static Object removeCyclicNodes(Object obj, String fieldName,
 	    String identifyingField, Queue<Object> queue)
@@ -228,8 +257,8 @@ public class CollectionsUtil {
 	}
 	// Enqueue the value and recursively call the method on the field
 	queue.add(obj);
-	Object next = removeCyclicNodes(fieldValue, fieldName,
-		identifyingField, queue);
+	Object next = removeCyclicNodes(fieldValue, fieldName, identifyingField,
+		queue);
 	field.set(obj, next);
 	return obj;
     }

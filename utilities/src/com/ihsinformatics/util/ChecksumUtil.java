@@ -17,47 +17,6 @@ package com.ihsinformatics.util;
  */
 public class ChecksumUtil {
 
-    /**
-     * Returns checksum digit calculated using Luhn algorithm
-     * 
-     * @param id
-     * @return
-     * @throws Exception
-     */
-    public static int getLuhnChecksum(String id) throws Exception {
-	String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVYWXZ_";
-	id = id.trim().toUpperCase();
-	int sum = 0;
-	for (int i = 0; i < id.length(); i++) {
-	    char ch = id.charAt(id.length() - i - 1);
-	    if (validChars.indexOf(ch) == -1)
-		throw new Exception("\"" + ch + "\" is an invalid character");
-	    int digit = (int) ch - 48;
-	    int weight;
-	    if (i % 2 == 0) {
-		weight = (2 * digit) - (int) (digit / 5) * 9;
-	    } else {
-		weight = digit;
-	    }
-	    sum += weight;
-	}
-	sum = Math.abs(sum) + 10;
-	return (10 - (sum % 10)) % 10;
-    }
-
-    /**
-     * Matches the checksum against a string using Luhn algorithm
-     * 
-     * @param id
-     * @param checksum
-     * @return
-     * @throws Exception
-     */
-    public static boolean matchLuhnChecksum(String id, int checksum)
-	    throws Exception {
-	return getLuhnChecksum(id) == checksum;
-    }
-
     // The multiplication table
     static int[][] d = new int[][] { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
 	    { 1, 2, 3, 4, 0, 6, 7, 8, 9, 5 }, { 2, 3, 4, 0, 1, 7, 8, 9, 5, 6 },
@@ -76,55 +35,115 @@ public class ChecksumUtil {
     // The inverse table
     static int[] inv = { 0, 4, 3, 2, 1, 5, 6, 7, 8, 9 };
 
+    /**
+     * Returns checksum digit calculated using Luhn algorithm
+     * 
+     * @param id
+     *            : the string ID to check
+     * @return generated Luhn check digit
+     * @throws Exception
+     *             : if invalid character is present
+     */
+    public static int getLuhnChecksum(String id) throws Exception {
+	String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVYWXZ_";
+	id = id.trim().toUpperCase();
+	int sum = 0;
+	for (int i = 0; i < id.length(); i++) {
+	    char ch = id.charAt(id.length() - i - 1);
+	    if (validChars.indexOf(ch) == -1)
+		throw new Exception("\"" + ch + "\" is an invalid character");
+	    int digit = ch - 48;
+	    int weight;
+	    if (i % 2 == 0) {
+		weight = (2 * digit) - digit / 5 * 9;
+	    } else {
+		weight = digit;
+	    }
+	    sum += weight;
+	}
+	sum = Math.abs(sum) + 10;
+	return (10 - (sum % 10)) % 10;
+    }
+
+    /**
+     * Matches the checksum against a string using Luhn algorithm
+     * 
+     * @param id
+     *            : the string ID to check
+     * @param checksum
+     *            : the check digit to match
+     * @return :true if check digit matches
+     * @throws Exception
+     *             : see <code>getLuhnChecksum</code>
+     */
+    public static boolean matchLuhnChecksum(String id, int checksum)
+	    throws Exception {
+	return getLuhnChecksum(id) == checksum;
+    }
+
+    /**
+     * Returns checksum digit calculated using Verhoeff algorithm
+     * 
+     * @param id
+     *            : the string ID to check
+     * @return : generated Luhn check digit
+     */
     public static int getVerhoeffCheck(String id) {
 	int c = 0;
-	int[] arr = StringToReversedIntArray(id);
+	int[] arr = stringToReversedIntArray(id);
 	for (int i = 0; i < arr.length; i++) {
 	    c = d[c][p[((i + 1) % 8)][arr[i]]];
 	}
 	return inv[c];
     }
 
-    /*
+    /**
      * Validates that an entered number is Verhoeff compliant. NB: Make sure the
      * check digit is the last one.
+     * 
+     * @param id
+     *            : the string ID to validate
+     * @return true if check the ID is valid
      */
-    public static boolean validateVerhoeff(String num) {
-
+    public static boolean validateVerhoeff(String id) {
 	int c = 0;
-	int[] myArray = StringToReversedIntArray(num);
+	int[] myArray = stringToReversedIntArray(id);
 	for (int i = 0; i < myArray.length; i++) {
 	    c = d[c][p[(i % 8)][myArray[i]]];
 	}
-
 	return (c == 0);
     }
 
-    /*
+    /**
      * Converts a string to a reversed integer array.
+     * 
+     * @param id
+     *            : the string ID to convert
+     * @return the reversed integer array
      */
-    private static int[] StringToReversedIntArray(String num) {
+    private static int[] stringToReversedIntArray(String id) {
 
-	int[] myArray = new int[num.length()];
+	int[] myArray = new int[id.length()];
 
-	for (int i = 0; i < num.length(); i++) {
-	    myArray[i] = Integer.parseInt(num.substring(i, i + 1));
+	for (int i = 0; i < id.length(); i++) {
+	    myArray[i] = Integer.parseInt(id.substring(i, i + 1));
 	}
-
 	myArray = Reverse(myArray);
-
 	return myArray;
-
     }
 
-    /*
+    /**
      * Reverses an int array
+     * 
+     * @param array
+     *            : the integer array to revers
+     * @return reversed array
      */
-    private static int[] Reverse(int[] myArray) {
-	int[] reversed = new int[myArray.length];
+    private static int[] Reverse(int[] array) {
+	int[] reversed = new int[array.length];
 
-	for (int i = 0; i < myArray.length; i++) {
-	    reversed[i] = myArray[myArray.length - (i + 1)];
+	for (int i = 0; i < array.length; i++) {
+	    reversed[i] = array[array.length - (i + 1)];
 	}
 
 	return reversed;

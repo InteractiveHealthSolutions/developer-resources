@@ -45,9 +45,10 @@ public final class MDHashUtil {
     /**
      * Match a string with a hash code
      * 
-     * @param String
-     *            string to match with the hash code
-     * @param byte[] hash code to match with the string
+     * @param string
+     *            : string to match with the hash code
+     * @param byte[]
+     *            : hash code to match with the string
      * @return true if string matches with the hash code
      */
     public static boolean match(String string, String hashString) {
@@ -61,7 +62,8 @@ public final class MDHashUtil {
     /**
      * Get hash code in a proper string format
      * 
-     * @param byte[] hash code to convert into string
+     * @param byte[]
+     *            : hash code to convert into string
      * @return String string form of hash code
      */
     public static String getHashString(String string) {
