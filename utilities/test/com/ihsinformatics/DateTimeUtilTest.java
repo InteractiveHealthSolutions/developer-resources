@@ -6,6 +6,7 @@ import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.After;
@@ -25,29 +26,125 @@ public class DateTimeUtilTest {
     }
 
     @Test
-    public final void testConvertToSQL() {
-	fail("Not yet implemented"); // TODO
-    }
-
-    @Test
-    public final void testGetSqlDate() {
-	fail("Not yet implemented"); // TODO
-    }
-
-    @Test
-    public final void testGetSqlDateTime() {
-	fail("Not yet implemented"); // TODO
-    }
-
-    @Test
     public final void testFromString() {
-	fail("Not yet implemented"); // TODO
+
+	List<String> dates = Arrays.asList("201812312359", "200001010001",
+		"200112312359");
+	String formate = "yyyyMMddHHmm";
+	for (String date : dates) {
+	    Date actual = DateTimeUtil.fromString(date, formate);
+	    int yyyy = Integer.parseInt(date.substring(0, 4));
+	    int MM = Integer.parseInt(date.substring(4, 6));
+	    int dd = Integer.parseInt(date.substring(6, 8));
+	    int HH = Integer.parseInt(date.substring(8, 10));
+	    int mm = Integer.parseInt(date.substring(10, 12));
+
+	    Calendar cal = Calendar.getInstance();
+	    cal.set(yyyy, MM - 1, dd, HH, mm);
+	    Date expected = cal.getTime();
+	    boolean b = actual.equals(expected);
+	    assertEquals("", expected.getTime(), actual.getTime(), 999);
+
+	}
+
+	dates = Arrays.asList("20181231 2359", "20000101 0001",
+		"20011231 2359");
+	formate = "yyyyMMdd HHmm";
+	for (String date : dates) {
+	    Date actual = DateTimeUtil.fromString(date, formate);
+	    int yyyy = Integer.parseInt(date.substring(0, 4));
+	    int MM = Integer.parseInt(date.substring(4, 6));
+	    int dd = Integer.parseInt(date.substring(6, 8));
+	    int HH = Integer.parseInt(date.substring(9, 11));
+	    int mm = Integer.parseInt(date.substring(11, 13));
+
+	    Calendar cal = Calendar.getInstance();
+	    cal.set(yyyy, MM - 1, dd, HH, mm);
+	    Date expected = cal.getTime();
+	    boolean b = actual.equals(expected);
+	    assertEquals("", expected.getTime(), actual.getTime(), 999);
+
+	}
+
+	dates = Arrays.asList("20181231235959", "20000101000101",
+		"20011231235959");
+	formate = "yyyyMMddHHmmss";
+	for (String date : dates) {
+	    Date actual = DateTimeUtil.fromString(date, formate);
+	    int yyyy = Integer.parseInt(date.substring(0, 4));
+	    int MM = Integer.parseInt(date.substring(4, 6));
+	    int dd = Integer.parseInt(date.substring(6, 8));
+	    int HH = Integer.parseInt(date.substring(8, 10));
+	    int mm = Integer.parseInt(date.substring(10, 12));
+	    int ss = Integer.parseInt(date.substring(12, 14));
+
+	    Calendar cal = Calendar.getInstance();
+	    cal.set(yyyy, MM - 1, dd, HH, mm, ss);
+	    Date expected = cal.getTime();
+	    boolean b = actual.equals(expected);
+	    assertEquals("", expected.getTime(), actual.getTime(), 999);
+
+	}
+
+	dates = Arrays.asList("20181231 235959", "20000101 000101",
+		"20011231 235959");
+	formate = "yyyyMMdd HHmmss";
+	for (String date : dates) {
+	    Date actual = DateTimeUtil.fromString(date, formate);
+	    int yyyy = Integer.parseInt(date.substring(0, 4));
+	    int MM = Integer.parseInt(date.substring(4, 6));
+	    int dd = Integer.parseInt(date.substring(6, 8));
+	    int HH = Integer.parseInt(date.substring(9, 11));
+	    int mm = Integer.parseInt(date.substring(11, 13));
+	    int ss = Integer.parseInt(date.substring(13, 15));
+
+	    Calendar cal = Calendar.getInstance();
+	    cal.set(yyyy, MM - 1, dd, HH, mm, ss);
+	    Date expected = cal.getTime();
+	    boolean b = actual.equals(expected);
+	    assertEquals("", expected.getTime(), actual.getTime(), 999);
+
+	}
+
+	dates = Arrays.asList("2018-12-31 23:59", "2000-01-01 00:01",
+		"2001-12-31 23:59");
+	formate = "yyyy-MM-dd HH:mm";
+	for (String date : dates) {
+	    Date actual = DateTimeUtil.fromString(date, formate);
+	    int yyyy = Integer.parseInt(date.substring(0, 4));
+	    int MM = Integer.parseInt(date.substring(5, 7));
+	    int dd = Integer.parseInt(date.substring(8, 10));
+	    int HH = Integer.parseInt(date.substring(11, 13));
+	    int mm = Integer.parseInt(date.substring(14, 16));
+
+	    Calendar cal = Calendar.getInstance();
+	    cal.set(yyyy, MM - 1, dd, HH, mm);
+	    Date expected = cal.getTime();
+	    boolean b = actual.equals(expected);
+	    assertEquals("", expected.getTime(), actual.getTime(), 999);
+	}
+
+	dates = Arrays.asList("2018-12-31 23:59:59", "2000-01-01 00:01:01",
+		"2001-12-31 23:59:59");
+	formate = "yyyy-MM-dd HH:mm:ss";
+	for (String date : dates) {
+	    Date actual = DateTimeUtil.fromString(date, formate);
+	    int yyyy = Integer.parseInt(date.substring(0, 4));
+	    int MM = Integer.parseInt(date.substring(5, 7));
+	    int dd = Integer.parseInt(date.substring(8, 10));
+	    int HH = Integer.parseInt(date.substring(11, 13));
+	    int mm = Integer.parseInt(date.substring(14, 16));
+	    int ss = Integer.parseInt(date.substring(17, 19));
+
+	    Calendar cal = Calendar.getInstance();
+	    cal.set(yyyy, MM - 1, dd, HH, mm, ss);
+	    Date expected = cal.getTime();
+	    boolean b = actual.equals(expected);
+	    assertEquals("", expected.getTime(), actual.getTime(), 999);
+	}
+
     }
 
-    @Test
-    public final void testToStringDateString() {
-	fail("Not yet implemented"); // TODO
-    }
 
     @Test
     public final void testFromSqlDateString() {
@@ -201,15 +298,66 @@ public class DateTimeUtilTest {
 
     @Test
     public final void testDetectDateTimeFormats() {
-	List<String> dates = Arrays.asList("31/12/2000 23:59:59",
-		"12/12/2012 00:00:00", "32/13/2000 28:59:59");
-	String expected = "dd/MM/yyyy HH:mm:ss";
+	// should not pass 200113322559
+	List<String> dates = Arrays.asList("201812312359", "200001010001",
+		"200113322559");
+	String expected = "yyyyMMddHHmm";
 	for (String date : dates) {
 	    String actual = DateTimeUtil.detectDateFormat(date);
-	    System.out.println(date);
 	    assertTrue("Incorrect time format detected for " + date,
 		    actual.equals(expected));
 	}
+
+	// should not pass 20011332 2559
+	dates = Arrays.asList("20181231 2359", "20000101 0001",
+		"20011332 2559");
+	expected = "yyyyMMdd HHmm";
+	for (String date : dates) {
+	    String actual = DateTimeUtil.detectDateFormat(date);
+	    assertTrue("Incorrect time format detected for " + date,
+		    actual.equals(expected));
+	}
+
+	// should not pass 20011332255959
+	dates = Arrays.asList("20181231235959", "20000101000101",
+		"20011332255959");
+	expected = "yyyyMMddHHmmss";
+	for (String date : dates) {
+	    String actual = DateTimeUtil.detectDateFormat(date);
+	    assertTrue("Incorrect time format detected for " + date,
+		    actual.equals(expected));
+	}
+
+	// should not pass 20011332 255959
+	dates = Arrays.asList("20181231 235959", "20000101 000101",
+		"20011332 255959");
+	expected = "yyyyMMdd HHmmss";
+	for (String date : dates) {
+	    String actual = DateTimeUtil.detectDateFormat(date);
+	    assertTrue("Incorrect time format detected for " + date,
+		    actual.equals(expected));
+	}
+
+	// should not pass 2001-13-32 25:59
+	dates = Arrays.asList("2018-12-31 23:59", "2000-01-01 00:01",
+		"2001-13-32 25:59");
+	expected = "yyyy-MM-dd HH:mm";
+	for (String date : dates) {
+	    String actual = DateTimeUtil.detectDateFormat(date);
+	    assertTrue("Incorrect time format detected for " + date,
+		    actual.equals(expected));
+	}
+
+	// should not pass 2001-13-32 25:59:59
+	dates = Arrays.asList("2018-12-31 23:59:59", "2000-01-01 00:01:01",
+		"2001-13-32 25:59:59");
+	expected = "yyyy-MM-dd HH:mm:ss";
+	for (String date : dates) {
+	    String actual = DateTimeUtil.detectDateFormat(date);
+	    assertTrue("Incorrect time format detected for " + date,
+		    actual.equals(expected));
+	}
+
     }
 
 }
