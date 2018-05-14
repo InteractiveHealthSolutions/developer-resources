@@ -30,7 +30,7 @@ import java.util.Map;
  * @author owais.hussain@ihsinformatics.com
  * 
  */
-public final class DatabaseUtil {
+public class DatabaseUtil {
     private Connection con;
     private String url;
     private String dbName;
