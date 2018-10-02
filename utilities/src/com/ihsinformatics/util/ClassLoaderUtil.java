@@ -25,11 +25,10 @@ import java.util.Set;
  * It was brought in from oscore trunk revision 147.
  *
  * @author $Author: hani $
- * @version $Revision: 117 $
+ * @author owais.hussain@ihsinformatics.com
+ * @version $Revision: 118 $
  */
 public class ClassLoaderUtil {
-    // ~ Methods
-    // ////////////////////////////////////////////////////////////////
 
     /**
      * Load all resources with a given name, potentially aggregating all results
@@ -186,6 +185,23 @@ public class ClassLoaderUtil {
 		}
 	    }
 	}
+    }
+
+    /**
+     * Searches for package in calling by its fully qualified name and loads
+     * given class in it by name
+     * 
+     * @param className
+     * @param packageName
+     * @param callingClass
+     * @return
+     * @throws ClassNotFoundException
+     */
+    public static Class<?> loadClass(String className, String packageName,
+	    Class<?> callingClass) throws ClassNotFoundException {
+	String fullySpecifiedClassName = Package.getPackage(packageName)
+		.getName() + "." + className;
+	return loadClass(fullySpecifiedClassName, callingClass);
     }
 
     /**

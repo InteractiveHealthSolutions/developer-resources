@@ -10,6 +10,7 @@ Interactive Health Solutions, hereby disclaims all copyright interest in this pr
 package com.ihsinformatics.util;
 
 import java.security.InvalidParameterException;
+import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -178,5 +179,65 @@ public class DateTimeUtil {
 	}
 	throw new InvalidParameterException(
 		"Given date does not match any of the standard conventions.");
+    }
+
+    /**
+     * Returns current date, like 2018
+     * 
+     * @return
+     */
+    @SuppressWarnings("deprecation")
+    public static final int YEAR() {
+	return new Date().getYear() + 1900;
+    }
+
+    /**
+     * Returns current month number (from 1 to 12)
+     * 
+     * @return
+     */
+    @SuppressWarnings("deprecation")
+    public static final int MONTH() {
+	return new Date().getMonth() + 1;
+    }
+
+    /**
+     * Returns full name of current month
+     * 
+     * @return
+     */
+    @SuppressWarnings("deprecation")
+    public static final String MONTH_NAME() {
+	return new DateFormatSymbols().getMonths()[new Date().getMonth()];
+    }
+
+    /**
+     * Returns current date
+     * 
+     * @return
+     */
+    @SuppressWarnings("deprecation")
+    public static final int DATE() {
+	return new Date().getDate();
+    }
+
+    /**
+     * Returns the number of current day of week
+     * 
+     * @return
+     */
+    @SuppressWarnings("deprecation")
+    public static final int WEEKDAY() {
+	return new Date().getDay() + 1;
+    }
+
+    /**
+     * Returns full name of current day of week
+     * 
+     * @return
+     */
+    @SuppressWarnings("deprecation")
+    public static final String WEEKDAY_NAME() {
+	return new DateFormatSymbols().getWeekdays()[new Date().getDay() + 1];
     }
 }
