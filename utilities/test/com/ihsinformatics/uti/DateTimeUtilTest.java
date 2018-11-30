@@ -1,4 +1,4 @@
-package com.ihsinformatics;
+package com.ihsinformatics.uti;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

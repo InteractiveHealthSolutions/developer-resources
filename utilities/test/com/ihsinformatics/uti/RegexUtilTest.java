@@ -9,7 +9,7 @@
  * Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors.
  * Contributors: Owais
  */
-package com.ihsinformatics;
+package com.ihsinformatics.uti;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
