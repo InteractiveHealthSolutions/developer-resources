@@ -24,39 +24,6 @@ public class VersionUtil implements Comparable<VersionUtil> {
     private int minor;
     private int micro;
 
-    /**
-     * @param args
-     * @throws ParseException
-     * @throws NullPointerException
-     * @throws NumberFormatException
-     */
-    public static void main(String[] args) throws NumberFormatException,
-	    NullPointerException, ParseException {
-	VersionUtil version = new VersionUtil();
-	// Should throw exceptions
-	// version.parseVersion(null);
-	// version.parseVersion("");
-	// version.parseVersion("0.9.2+alpha");
-	// version.parseVersion("2.1.0-rc");
-	// Should not throw exceptions
-	// version.parseVersion("0.0.0");
-	// System.out.println(version);
-	// version.parseVersion("0.9.2");
-	// System.out.println(version);
-	// version.parseVersion("1.9.2");
-	// System.out.println(version);
-	// version.parseVersion("2.0.0");
-	// System.out.println(version);
-	version.parseVersion("1.9.0-alpha");
-	System.out.println(version);
-	version.parseVersion("0.5.0-ALPHA");
-	System.out.println(version);
-	version.parseVersion("0.9.6-beta");
-	System.out.println(version);
-	version.parseVersion("3.1.0-BETA");
-	System.out.println(version);
-    }
-
     public VersionUtil() {
 	version = "";
 	isAlpha = isBeta = isRelease = false;
@@ -88,8 +55,7 @@ public class VersionUtil implements Comparable<VersionUtil> {
      * 
      * @param version
      */
-    public void parseVersion(String version) throws NullPointerException,
-	    ParseException, NumberFormatException {
+    public void parseVersion(String version) throws ParseException {
 	if (version == null) {
 	    throw new NullPointerException();
 	}
@@ -124,8 +90,8 @@ public class VersionUtil implements Comparable<VersionUtil> {
 		setBeta(true);
 		setRelease(false);
 	    } else {
-		throw new ParseException("Cannot parse version type "
-			+ further[1], 1);
+		throw new ParseException(
+			"Cannot parse version type " + further[1], 1);
 	    }
 	} else {
 	    setMicro(Integer.parseInt(parts[2]));

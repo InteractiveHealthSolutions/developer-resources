@@ -48,44 +48,52 @@ public class DateTimeUtil {
     public static final String ISO8601 = "yyyy-MM-dd'T'HH:mm:ss"; // 1970-01-01T00:00:00.000
     public static final String ISO8601_FULL = "yyyy-MM-dd'T'HH:mm:ss.'Z'"; // 1970-01-01T00:00:00.000+0000
 
-    @SuppressWarnings("serial")
-    private static final Map<String, String> DATE_FORMATS = new HashMap<String, String>() {
-	{
-	    // Time only
-	    put("^[0-2]\\d[0-5]\\d$", "HHmm");
-	    put("^[0-2]\\d:[0-5]\\d$", "HH:mm");
-	    put("^[0-2]\\d([0-5]\\d){2}$", "HHmmss");
-	    put("^[0-2]\\d:[0-5]\\d:[0-5]\\d$", "HH:mm:ss");
-	    // Date only
-	    put("^\\d{2}[0-1]\\d[0-3]\\d$", "yyMMdd");
-	    put("^\\d{4}[0-1]\\d[0-3]\\d$", "yyyyMMdd");
-	    put("^\\d{2}-[0-1]\\d-[0-3]\\d$", "yy-MM-dd");
-	    put("^\\d{4}-[0-1]\\d-[0-3]\\d$", "yyyy-MM-dd");
-	    put("^[0-3]\\d-[0-1]\\d-\\d{2}$", "dd-MM-yy");
-	    put("^[0-3]\\d-[0-1]\\d-\\d{4}$", "dd-MM-yyyy");
-	    put("^[0-3]\\d [0-1]\\d \\d{2}$", "dd MM yy");
-	    put("^[0-3]\\d [0-1]\\d \\d{4}$", "dd MM yyyy");
-	    put("^[0-3]\\d/[0-1]\\d/\\d{2}$", "dd/MM/yy");
-	    put("^[0-3]\\d/[0-1]\\d/\\d{4}$", "dd/MM/yyyy");
-	    put("^[0-3]\\d [a-z]{3} \\d{2}$", "dd MMM yy");
-	    put("^[0-3]\\d [a-z]{3} \\d{4}$", "dd MMM yyyy");
-	    // Date and Time
-	    put("^\\d{12,14}$", "tt");
-	    put("^\\d{4}[0-1]\\d[0-3]\\d[0-2]\\d[0-5]\\d$", "yyyyMMddHHmm");
-	    put("^\\d{4}[0-1]\\d[0-3]\\d [0-2]\\d[0-5]\\d$", "yyyyMMdd HHmm");
-	    put("^\\d{4}[0-1]\\d[0-3]\\d[0-2]\\d([0-5]\\d){2}$",
-		    "yyyyMMddHHmmss");
-	    put("^\\d{4}[0-1]\\d[0-3]\\d [0-2]\\d([0-5]\\d){2}$",
-		    "yyyyMMdd HHmmss");
-	    put("^\\d{4}-[0-1]\\d-[0-3]\\d [0-2]\\d:[0-5]\\d$",
-		    "yyyy-MM-dd HH:mm");
-	    put("^\\d{4}-[0-1]\\d-[0-3]\\d [0-2]\\d:[0-5]\\d:[0-5]\\d$",
-		    "yyyy-MM-dd HH:mm:ss");
-	    // ISO8601
-	    put("^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}\\.\\d{2,4}$",
-		    "yyyy-MM-dd HH:mm:ss.'Z'");
-	}
-    };
+    private static final Map<String, String> DATE_FORMATS;
+
+    static {
+	DATE_FORMATS = new HashMap<>();
+	// Time only
+	DATE_FORMATS.put("^[0-2]\\d[0-5]\\d$", "HHmm");
+	DATE_FORMATS.put("^[0-2]\\d:[0-5]\\d$", "HH:mm");
+	DATE_FORMATS.put("^[0-2]\\d([0-5]\\d){2}$", "HHmmss");
+	DATE_FORMATS.put("^[0-2]\\d:[0-5]\\d:[0-5]\\d$", "HH:mm:ss");
+	// Date only
+	DATE_FORMATS.put("^\\d{2}[0-1]\\d[0-3]\\d$", "yyMMdd");
+	DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d$", SQL_DATESTAMP);
+	DATE_FORMATS.put("^\\d{2}-[0-1]\\d-[0-3]\\d$", "yy-MM-dd");
+	DATE_FORMATS.put("^\\d{4}-[0-1]\\d-[0-3]\\d$", SQL_DATE);
+	DATE_FORMATS.put("^[0-3]\\d-[0-1]\\d-\\d{2}$", "dd-MM-yy");
+	DATE_FORMATS.put("^[0-3]\\d-[0-1]\\d-\\d{4}$",
+		STANDARD_DATE_HYPHENATED);
+	DATE_FORMATS.put("^[0-3]\\d [0-1]\\d \\d{2}$", "dd MM yy");
+	DATE_FORMATS.put("^[0-3]\\d [0-1]\\d \\d{4}$", "dd MM yyyy");
+	DATE_FORMATS.put("^[0-3]\\d/[0-1]\\d/\\d{2}$", "dd/MM/yy");
+	DATE_FORMATS.put("^[0-3]\\d/[0-1]\\d/\\d{4}$", STANDARD_DATE);
+	DATE_FORMATS.put("^[0-3]\\d [a-z]{3} \\d{2}$", "dd MMM yy");
+	DATE_FORMATS.put("^[0-3]\\d [a-z]{3} \\d{4}$", "dd MMM yyyy");
+	// Date and Time
+	DATE_FORMATS.put("^\\d{12,14}$", "tt");
+	DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d[0-2]\\d[0-5]\\d$",
+		"yyyyMMddHHmm");
+	DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d [0-2]\\d[0-5]\\d$",
+		"yyyyMMdd HHmm");
+	DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d[0-2]\\d([0-5]\\d){2}$",
+		SQL_TIMESTAMP);
+	DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d [0-2]\\d([0-5]\\d){2}$",
+		"yyyyMMdd HHmmss");
+	DATE_FORMATS.put("^\\d{4}-[0-1]\\d-[0-3]\\d [0-2]\\d:[0-5]\\d$",
+		"yyyy-MM-dd HH:mm");
+	DATE_FORMATS.put(
+		"^\\d{4}-[0-1]\\d-[0-3]\\d [0-2]\\d:[0-5]\\d:[0-5]\\d$",
+		SQL_DATETIME);
+	// ISO8601
+	DATE_FORMATS.put(
+		"^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}\\.\\d{2,4}$",
+		"yyyy-MM-dd HH:mm:ss.'Z'");
+    }
+
+    private DateTimeUtil() {
+    }
 
     @Deprecated
     public static Date getDateFromString(String string, String format)
