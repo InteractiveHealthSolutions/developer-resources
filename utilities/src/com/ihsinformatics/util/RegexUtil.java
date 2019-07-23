@@ -113,6 +113,7 @@ public class RegexUtil {
     public static final String CNIC = "^[0-9]{5,5}[-.]{0,1}[0-9]{7,7}[-.]{0,1}[0-9]";
     public static final String URL = "^(((ht|f)tp(s?))\\:\\/\\/)?(localhost|([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5]|.){3}([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])|(www.|[a-zA-Z].)[a-zA-Z0-9\\-\\.]+\\.(com|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk|pk|co|))(\\:[0-9]+)*(\\/($|[a-zA-Z0-9\\.\\,\\;\\?\\\\'\\\\\\\\\\\\+&amp;%\\\\$#\\\\=~_\\\\-]+))*$";
     public static final String TEXT = "^(a-zA-Z0-9@\\-#\\.\\(\\)\\/%&\\s)";
+    public static final String UUID = "([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})";
 
     /**
      * Checks if given input is a valid number
