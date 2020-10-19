@@ -305,32 +305,28 @@ public class RegexUtil {
 	boolean isValid = true;
 	id = id.replaceAll("\\W", "");
 	// Validate Luhn check digit
-	// TODO: Replace with isValidCheckDigit() method
-	if (isValid) {
-	    String idWithoutCheckdigit = id.substring(0, id.length() - 1);
-	    char idCheckdigit = id.charAt(id.length() - 1);
-	    String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVYWXZ_";
-	    idWithoutCheckdigit = idWithoutCheckdigit.trim();
-	    int sum = 0;
-	    for (int i = 0; i < idWithoutCheckdigit.length(); i++) {
-		char ch = idWithoutCheckdigit.charAt(idWithoutCheckdigit
-			.length() - i - 1);
-		if (validChars.indexOf(ch) == -1)
-		    isValid = false;
-		int digit = ch - 48;
-		int weight;
-		if (i % 2 == 0) {
-		    weight = (2 * digit) - digit / 5 * 9;
-		} else {
-		    weight = digit;
-		}
-		sum += weight;
+	String idWithoutCheckdigit = id.substring(0, id.length() - 1);
+	char idCheckdigit = id.charAt(id.length() - 1);
+	String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVYWXZ_";
+	idWithoutCheckdigit = idWithoutCheckdigit.trim();
+	int sum = 0;
+	for (int i = 0; i < idWithoutCheckdigit.length(); i++) {
+	    char ch = idWithoutCheckdigit
+		    .charAt(idWithoutCheckdigit.length() - i - 1);
+	    if (validChars.indexOf(ch) == -1)
+		isValid = false;
+	    int digit = ch - 48;
+	    int weight;
+	    if (i % 2 == 0) {
+		weight = (2 * digit) - digit / 5 * 9;
+	    } else {
+		weight = digit;
 	    }
-	    sum = Math.abs(sum) + 10;
-	    int checkDigit = (10 - (sum % 10)) % 10;
-	    isValid = checkDigit == Integer.parseInt(String
-		    .valueOf(idCheckdigit));
+	    sum += weight;
 	}
+	sum = Math.abs(sum) + 10;
+	int checkDigit = (10 - (sum % 10)) % 10;
+	isValid = checkDigit == Integer.parseInt(String.valueOf(idCheckdigit));
 	return isValid;
     }
 
@@ -351,8 +347,8 @@ public class RegexUtil {
 	idWithoutCheckdigit = idWithoutCheckdigit.trim();
 	int sum = 0;
 	for (int i = 0; i < idWithoutCheckdigit.length(); i++) {
-	    char ch = idWithoutCheckdigit.charAt(idWithoutCheckdigit.length()
-		    - i - 1);
+	    char ch = idWithoutCheckdigit
+		    .charAt(idWithoutCheckdigit.length() - i - 1);
 	    if (validChars.indexOf(ch) == -1)
 		isValid = false;
 	    int digit = ch - 48;

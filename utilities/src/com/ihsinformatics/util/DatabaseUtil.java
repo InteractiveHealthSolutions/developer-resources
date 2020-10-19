@@ -23,6 +23,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.apache.commons.dbutils.AsyncQueryRunner;
+import org.apache.commons.dbutils.DbUtils;
 
 /**
  * Class to perform some common JDBC Operations
@@ -37,6 +45,42 @@ public class DatabaseUtil {
     private String driverName;
     private String userName;
     private String password;
+
+    public static void main(String[] args) {
+	DatabaseUtil obj = new DatabaseUtil("jdbc:mysql://localhost:3306/world",
+		"world", "com.mysql.jdbc.Driver", "root", "jingle94");
+	obj.tryAsyncQuery();
+	System.exit(0);
+    }
+
+    private void tryAsyncQuery() {
+	try {
+	    String suffix = "SELECT ct.ID, ct.Name, ct.District, cy.Name as Country, cy.Continent, cy.Region, cl.Language, ct.Population, cy.SurfaceArea, cy.LifeExpectancy, cy.GNP FROM city as ct \n"
+		    + "INNER JOIN country AS cy ON cy.Code = ct.CountryCode \n"
+		    + "INNER JOIN countrylanguage AS cl ON cl.CountryCode = cy.Code";
+	    List<String> queries = new ArrayList<>();
+	    for (int i = 1; i <= 5; i++) {
+		queries.add("CREATE TABLE dim_location_" + String.valueOf(i)
+			+ " " + suffix);
+	    }
+	    AsyncQueryRunner asyncQueryRunner = new AsyncQueryRunner(
+		    Executors.newCachedThreadPool());
+	    DbUtils.loadDriver(driverName);
+	    Connection conn = DriverManager.getConnection(url, userName,
+		    password);
+	    Future<Integer> future = null;
+	    for (String query : queries) {
+		future = asyncQueryRunner.update(conn, query);
+		Integer updatedRecords = future.get(10, TimeUnit.SECONDS);
+		System.out.println(updatedRecords + " record(s) updated.");
+	    }
+	    DbUtils.close(conn);
+
+	} catch (SQLException | InterruptedException | ExecutionException
+		| TimeoutException e) {
+	    e.printStackTrace();
+	}
+    }
 
     /**
      * Default constructor
@@ -237,8 +281,8 @@ public class DatabaseUtil {
      */
     public static void remoteSelectInsert(String selectQuery,
 	    String insertQuery, DatabaseUtil sourceConnection,
-	    DatabaseUtil targetConnection) throws SQLException,
-	    InstantiationException, IllegalAccessException,
+	    DatabaseUtil targetConnection)
+	    throws SQLException, InstantiationException, IllegalAccessException,
 	    ClassNotFoundException {
 	Connection sourceConn = sourceConnection.getConnection();
 	Connection targetConn = targetConnection.getConnection();
@@ -340,8 +384,8 @@ public class DatabaseUtil {
 	List<String> ls = new ArrayList<String>();
 	openConnection();
 	Statement st = con.createStatement();
-	ResultSet rs = st.executeQuery("SELECT * FROM " + tableName
-		+ " WHERE 1 = 0");
+	ResultSet rs = st
+		.executeQuery("SELECT * FROM " + tableName + " WHERE 1 = 0");
 	ResultSetMetaData md = rs.getMetaData();
 	for (int i = 1; i <= md.getColumnCount(); i++) {
 	    ls.add(md.getColumnLabel(i));
@@ -492,9 +536,8 @@ public class DatabaseUtil {
      * @throws InstantiationException
      */
 
-    public Object truncateTable(String tableName)
-	    throws InstantiationException, IllegalAccessException,
-	    ClassNotFoundException {
+    public Object truncateTable(String tableName) throws InstantiationException,
+	    IllegalAccessException, ClassNotFoundException {
 	String command = "TRUNCATE TABLE " + tableName;
 	return runCommand(CommandType.TRUNCATE, command);
     }
@@ -517,8 +560,8 @@ public class DatabaseUtil {
     public Object addColumn(String tableName, String columnName,
 	    String sqlDataType) throws InstantiationException,
 	    IllegalAccessException, ClassNotFoundException {
-	String command = "ALTER TABLE " + tableName + " ADD " + columnName
-		+ " " + sqlDataType;
+	String command = "ALTER TABLE " + tableName + " ADD " + columnName + " "
+		+ sqlDataType;
 	return runCommand(CommandType.ALTER, command);
     }
 
@@ -544,8 +587,8 @@ public class DatabaseUtil {
 	    IllegalAccessException, ClassNotFoundException {
 	String command = "ALTER TABLE " + tableName + " CHANGE " + columnName
 		+ " " + newName + " " + newDataType;
-	return Boolean.parseBoolean(runCommand(CommandType.ALTER, command)
-		.toString());
+	return Boolean.parseBoolean(
+		runCommand(CommandType.ALTER, command).toString());
     }
 
     /**
@@ -589,8 +632,8 @@ public class DatabaseUtil {
      * @param tableName
      *            Table name to count rows from Like "MyTable"
      * @param filter
-     *            Filter to specify criteria of counting rows Like
-     *            "WHERE ID = 100"
+     *            Filter to specify criteria of counting rows Like "WHERE ID =
+     *            100"
      * @return Number of records
      */
 
@@ -636,14 +679,15 @@ public class DatabaseUtil {
      *            Filter to set criteria to read record Like "WHERE ID = 100"
      * @return Array of Objects containing record
      */
-    public Object[] getRecord(String tableName, String columnList, String filter) {
+    public Object[] getRecord(String tableName, String columnList,
+	    String filter) {
 	Object[] record;
 	ArrayList<Object> array = new ArrayList<Object>();
 	try {
 	    openConnection();
 	    Statement st = con.createStatement();
-	    String command = "SELECT " + columnList + " FROM " + tableName
-		    + " " + arrangeFilter(filter) + " LIMIT 1";
+	    String command = "SELECT " + columnList + " FROM " + tableName + " "
+		    + arrangeFilter(filter) + " LIMIT 1";
 	    ResultSet rs = st.executeQuery(command);
 	    ResultSetMetaData rsmd = rs.getMetaData();
 	    while (rs.next()) {
@@ -838,8 +882,8 @@ public class DatabaseUtil {
 	    ClassNotFoundException {
 	int result = 0;
 	try {
-	    String comm = columns.replaceAll(" ", "").replaceAll(
-		    "[a-zA-Z]*[a-zA-Z]", "?");
+	    String comm = columns.replaceAll(" ", "")
+		    .replaceAll("[a-zA-Z]*[a-zA-Z]", "?");
 	    String command = "INSERT INTO " + tableName + " (" + columns
 		    + ") VALUES (" + comm + ")";
 	    openConnection();
@@ -930,8 +974,8 @@ public class DatabaseUtil {
      * @throws InstantiationException
      */
     public Object runCommandWithException(CommandType type, String command)
-	    throws SQLException, InstantiationException,
-	    IllegalAccessException, ClassNotFoundException {
+	    throws SQLException, InstantiationException, IllegalAccessException,
+	    ClassNotFoundException {
 	Object obj = new Object();
 	try {
 	    openConnection();
@@ -988,8 +1032,8 @@ public class DatabaseUtil {
 		for (int i = 0; i < params.size(); i++) {
 		    paramString += "?,";
 		}
-		paramString = paramString
-			.substring(0, paramString.length() - 1);
+		paramString = paramString.substring(0,
+			paramString.length() - 1);
 	    }
 	    paramString += ");";
 	    String query = "call " + procedureName + paramString;
