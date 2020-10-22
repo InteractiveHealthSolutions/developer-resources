@@ -9,88 +9,86 @@ You can also access the license on the internet at the address: http://www.gnu.o
 Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors. */
 package com.ihsinformatics.util;
 
-import java.security.MessageDigest;
-import java.util.Arrays;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.MessageDigest;
+import java.util.Arrays;
 
 /**
  * @author owais.hussain@ihsinformatics.com
- *
  */
 public class EncryptionUtil {
     private String key;
 
     public EncryptionUtil() {
-	key = "MyAwesomeKey";
+        key = "MyAwesomeKey";
     }
 
     public EncryptionUtil(String key) {
-	this.key = key;
+        this.key = key;
     }
 
     public static void main(String[] args) {
-	// no change
-	EncryptionUtil obj = new EncryptionUtil("AllDayIDreamAboutCode");
-	try {
-	    byte[] enc = obj.encrypt("c1267d24-3188-11e8-9b75-0a0027000002");
-	    byte[] encFromStr = new String(enc).getBytes();
-	    String dec = obj.decrypt(encFromStr);
-	    for (byte b : encFromStr) {
-		System.out.print(b + ", ");
-	    }
-	    System.out.println("\n" + new String(enc));
-	    System.out.println(dec);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
+        // no change
+        EncryptionUtil obj = new EncryptionUtil("AllDayIDreamAboutCode");
+        try {
+            byte[] enc = obj.encrypt("c1267d24-3188-11e8-9b75-0a0027000002");
+            byte[] encFromStr = new String(enc).getBytes();
+            String dec = obj.decrypt(encFromStr);
+            for (byte b : encFromStr) {
+                System.out.print(b + ", ");
+            }
+            System.out.println("\n" + new String(enc));
+            System.out.println(dec);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Encrypt given message using DESede algorithm
-     * 
+     *
      * @param message
-     * @return
+     * @return encrypted byte array
      * @throws Exception
      */
     public byte[] encrypt(String message) throws Exception {
-	final MessageDigest md = MessageDigest.getInstance("md5");
-	final byte[] digestOfPassword = md.digest(key.getBytes("utf-8"));
-	final byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
-	for (int j = 0, k = 16; j < 8;) {
-	    keyBytes[k++] = keyBytes[j++];
-	}
-	final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
-	final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
-	final Cipher cipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
-	cipher.init(Cipher.ENCRYPT_MODE, key, iv);
-	final byte[] plainTextBytes = message.getBytes("utf-8");
-	final byte[] cipherText = cipher.doFinal(plainTextBytes);
-	return cipherText;
+        final MessageDigest md = MessageDigest.getInstance("md5");
+        final byte[] digestOfPassword = md.digest(key.getBytes("utf-8"));
+        final byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+        for (int j = 0, k = 16; j < 8; ) {
+            keyBytes[k++] = keyBytes[j++];
+        }
+        final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+        final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
+        final Cipher cipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+        final byte[] plainTextBytes = message.getBytes("utf-8");
+        final byte[] cipherText = cipher.doFinal(plainTextBytes);
+        return cipherText;
     }
 
     /**
      * Decrypt given encrypted message using DESede algorithm and key
-     * 
+     *
      * @param message
-     * @return
+     * @return string containing decrypted text
      * @throws Exception
      */
     public String decrypt(byte[] message) throws Exception {
-	final MessageDigest md = MessageDigest.getInstance("md5");
-	final byte[] digestOfPassword = md.digest(key.getBytes("utf-8"));
-	final byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
-	for (int j = 0, k = 16; j < 8;) {
-	    keyBytes[k++] = keyBytes[j++];
-	}
-	final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
-	final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
-	final Cipher decipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
-	decipher.init(Cipher.DECRYPT_MODE, key, iv);
-	final byte[] plainText = decipher.doFinal(message);
-	return new String(plainText, "UTF-8");
+        final MessageDigest md = MessageDigest.getInstance("md5");
+        final byte[] digestOfPassword = md.digest(key.getBytes("utf-8"));
+        final byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+        for (int j = 0, k = 16; j < 8; ) {
+            keyBytes[k++] = keyBytes[j++];
+        }
+        final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+        final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
+        final Cipher decipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
+        decipher.init(Cipher.DECRYPT_MODE, key, iv);
+        final byte[] plainText = decipher.doFinal(message);
+        return new String(plainText, "UTF-8");
     }
 }

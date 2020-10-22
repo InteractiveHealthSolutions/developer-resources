@@ -25,9 +25,9 @@ public class VersionUtil implements Comparable<VersionUtil> {
     private int micro;
 
     public VersionUtil() {
-	version = "";
-	isAlpha = isBeta = isRelease = false;
-	major = minor = micro = 0;
+        version = "";
+        isAlpha = isBeta = isRelease = false;
+        major = minor = micro = 0;
     }
 
     /**
@@ -39,254 +39,246 @@ public class VersionUtil implements Comparable<VersionUtil> {
      * @param micro
      */
     public VersionUtil(boolean isAlpha, boolean isBeta, boolean isRelease,
-	    int major, int minor, int micro) {
-	super();
-	this.isAlpha = isAlpha;
-	this.isBeta = isBeta;
-	this.isRelease = isRelease;
-	this.major = major;
-	this.minor = minor;
-	this.micro = micro;
+                       int major, int minor, int micro) {
+        super();
+        this.isAlpha = isAlpha;
+        this.isBeta = isBeta;
+        this.isRelease = isRelease;
+        this.major = major;
+        this.minor = minor;
+        this.micro = micro;
     }
 
     /**
      * Version must be in one of the following formats:
      * MAJOR.Minor.micro-(alpha|beta); MAJOR.Minor.micro
-     * 
+     *
      * @param version
      */
     public void parseVersion(String version) throws ParseException {
-	if (version == null) {
-	    throw new NullPointerException();
-	}
-	if ("".equals(version)) {
-	    throw new ParseException("Cannot parse empty string", 0);
-	}
-	String[] parts = version.split("[.]");
-	if (parts.length != 3) {
-	    throw new NumberFormatException(
-		    "Cannot parse version in invalid format");
-	}
-	setAlpha(false);
-	setBeta(false);
-	setRelease(true);
-	setMajor(Integer.parseInt(parts[0]));
-	setMinor(Integer.parseInt(parts[1]));
-	// Check if release type and/or build number are given
-	if (parts[2].contains("-")) {
-	    String[] further = parts[2].split("[-]");
-	    if (further.length != 2) {
-		throw new NumberFormatException(
-			"Cannot parse version in invalid format");
-	    }
-	    setMicro(Integer.parseInt(further[0]));
-	    // Decide what type of release this is
-	    if (further[1].equalsIgnoreCase("alpha")) {
-		setAlpha(true);
-		setBeta(false);
-		setRelease(false);
-	    } else if (further[1].equalsIgnoreCase("beta")) {
-		setAlpha(false);
-		setBeta(true);
-		setRelease(false);
-	    } else {
-		throw new ParseException(
-			"Cannot parse version type " + further[1], 1);
-	    }
-	} else {
-	    setMicro(Integer.parseInt(parts[2]));
-	}
-	if (getMajor() == 0 && getMinor() == 0 && getMicro() == 0) {
-	    setRelease(false);
-	}
+        if (version == null) {
+            throw new NullPointerException();
+        }
+        if ("".equals(version)) {
+            throw new ParseException("Cannot parse empty string", 0);
+        }
+        String[] parts = version.split("[.]");
+        if (parts.length != 3) {
+            throw new NumberFormatException(
+                    "Cannot parse version in invalid format");
+        }
+        setAlpha(false);
+        setBeta(false);
+        setRelease(true);
+        setMajor(Integer.parseInt(parts[0]));
+        setMinor(Integer.parseInt(parts[1]));
+        // Check if release type and/or build number are given
+        if (parts[2].contains("-")) {
+            String[] further = parts[2].split("[-]");
+            if (further.length != 2) {
+                throw new NumberFormatException(
+                        "Cannot parse version in invalid format");
+            }
+            setMicro(Integer.parseInt(further[0]));
+            // Decide what type of release this is
+            if (further[1].equalsIgnoreCase("alpha")) {
+                setAlpha(true);
+                setBeta(false);
+                setRelease(false);
+            } else if (further[1].equalsIgnoreCase("beta")) {
+                setAlpha(false);
+                setBeta(true);
+                setRelease(false);
+            } else {
+                throw new ParseException(
+                        "Cannot parse version type " + further[1], 1);
+            }
+        } else {
+            setMicro(Integer.parseInt(parts[2]));
+        }
+        if (getMajor() == 0 && getMinor() == 0 && getMicro() == 0) {
+            setRelease(false);
+        }
     }
 
     /**
      * @return the version
      */
     public String getVersion() {
-	return version;
+        return version;
     }
 
     /**
      * @return the isAlpha
      */
     public boolean isAlpha() {
-	return isAlpha;
+        return isAlpha;
     }
 
     /**
-     * @param isAlpha
-     *            the isAlpha to set
+     * @param isAlpha the isAlpha to set
      */
     public void setAlpha(boolean isAlpha) {
-	this.isAlpha = isAlpha;
+        this.isAlpha = isAlpha;
     }
 
     /**
      * @return the isBeta
      */
     public boolean isBeta() {
-	return isBeta;
+        return isBeta;
     }
 
     /**
-     * @param isBeta
-     *            the isBeta to set
+     * @param isBeta the isBeta to set
      */
     public void setBeta(boolean isBeta) {
-	this.isBeta = isBeta;
+        this.isBeta = isBeta;
     }
 
     /**
      * @return the isRelease
      */
     public boolean isRelease() {
-	return isRelease;
+        return isRelease;
     }
 
     /**
-     * @param isRelease
-     *            the isRelease to set
+     * @param isRelease the isRelease to set
      */
     public void setRelease(boolean isRelease) {
-	this.isRelease = isRelease;
+        this.isRelease = isRelease;
     }
 
     /**
      * @return the major
      */
     public int getMajor() {
-	return major;
+        return major;
     }
 
     /**
-     * @param major
-     *            the major to set
+     * @param major the major to set
      */
     public void setMajor(int major) {
-	this.major = major;
+        this.major = major;
     }
 
     /**
      * @return the minor
      */
     public int getMinor() {
-	return minor;
+        return minor;
     }
 
     /**
-     * @param minor
-     *            the minor to set
+     * @param minor the minor to set
      */
     public void setMinor(int minor) {
-	this.minor = minor;
+        this.minor = minor;
     }
 
     /**
      * @return the micro
      */
     public int getMicro() {
-	return micro;
+        return micro;
     }
 
     /**
-     * @param micro
-     *            the micro to set
+     * @param micro the micro to set
      */
     public void setMicro(int micro) {
-	this.micro = micro;
+        this.micro = micro;
     }
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + (isAlpha ? 1231 : 1237);
-	result = prime * result + (isBeta ? 1231 : 1237);
-	result = prime * result + (isRelease ? 1231 : 1237);
-	result = prime * result + major;
-	result = prime * result + micro;
-	result = prime * result + minor;
-	result = prime * result + ((version == null) ? 0 : version.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (isAlpha ? 1231 : 1237);
+        result = prime * result + (isBeta ? 1231 : 1237);
+        result = prime * result + (isRelease ? 1231 : 1237);
+        result = prime * result + major;
+        result = prime * result + micro;
+        result = prime * result + minor;
+        result = prime * result + ((version == null) ? 0 : version.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	VersionUtil other = (VersionUtil) obj;
-	if (isAlpha != other.isAlpha)
-	    return false;
-	if (isBeta != other.isBeta)
-	    return false;
-	if (isRelease != other.isRelease)
-	    return false;
-	if (major != other.major)
-	    return false;
-	if (micro != other.micro)
-	    return false;
-	if (minor != other.minor)
-	    return false;
-	if (version == null) {
-	    if (other.version != null)
-		return false;
-	} else if (!version.equals(other.version))
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        VersionUtil other = (VersionUtil) obj;
+        if (isAlpha != other.isAlpha)
+            return false;
+        if (isBeta != other.isBeta)
+            return false;
+        if (isRelease != other.isRelease)
+            return false;
+        if (major != other.major)
+            return false;
+        if (micro != other.micro)
+            return false;
+        if (minor != other.minor)
+            return false;
+        if (version == null) {
+            if (other.version != null)
+                return false;
+        } else if (!version.equals(other.version))
+            return false;
+        return true;
     }
 
     /**
      * Two versions are compatible if their Major and Minor versions are same
-     * 
-     * @param version
-     *            : the version to check
+     *
+     * @param version : the version to check
      * @return true of false
      */
     public boolean isCompatible(VersionUtil version) {
-	boolean result = false;
-	if (version.compareTo(this) == 0)
-	    result = true;
-	else if (version.getMajor() == this.getMajor()
-		&& version.getMinor() == this.getMinor())
-	    result = true;
-	return result;
+        boolean result = false;
+        if (version.compareTo(this) == 0)
+            result = true;
+        else if (version.getMajor() == this.getMajor()
+                && version.getMinor() == this.getMinor())
+            result = true;
+        return result;
     }
 
     /**
      * Returns 0 if both versions are same; 1 if version passed is ahead; -1 if
      * version passed is behind
-     * 
-     * @param version
-     *            : the version to compare
+     *
+     * @param version : the version to compare
      * @return number -1, 0, 1
      */
     @Override
     public int compareTo(VersionUtil version) {
-	int result = -1;
-	if (this.equals(version))
-	    result = 0;
-	if (version.getMajor() == this.getMajor()) {
-	    if (version.getMinor() == this.getMinor()) {
-		if (version.getMicro() == this.getMinor())
-		    result = 0;
-		else if (version.getMicro() > this.getMicro())
-		    result = 1;
-	    } else if (version.getMinor() > this.getMinor())
-		result = 1;
-	} else if (version.getMajor() > this.getMajor())
-	    result = 1;
-	return result;
+        int result = -1;
+        if (this.equals(version))
+            result = 0;
+        if (version.getMajor() == this.getMajor()) {
+            if (version.getMinor() == this.getMinor()) {
+                if (version.getMicro() == this.getMinor())
+                    result = 0;
+                else if (version.getMicro() > this.getMicro())
+                    result = 1;
+            } else if (version.getMinor() > this.getMinor())
+                result = 1;
+        } else if (version.getMajor() > this.getMajor())
+            result = 1;
+        return result;
     }
 
     @Override
     public String toString() {
-	return getMajor() + "." + getMinor() + "." + getMicro()
-		+ (isAlpha ? "-alpha" : isBeta ? "-beta" : "");
+        return getMajor() + "." + getMinor() + "." + getMicro()
+                + (isAlpha ? "-alpha" : isBeta ? "-beta" : "");
     }
 }

@@ -7,21 +7,16 @@ package com.ihsinformatics.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class is extremely useful for loading resources and classes in a fault
  * tolerant manner that works across different applications servers.
- *
+ * <p>
  * It has come out of many months of frustrating use of multiple application
  * servers at Atlassian, please don't change things unless you're sure they're
  * not going to break in one server or another!
- * 
+ * <p>
  * It was brought in from oscore trunk revision 147.
  *
  * @author $Author: hani $
@@ -34,7 +29,7 @@ public class ClassLoaderUtil {
      * Load all resources with a given name, potentially aggregating all results
      * from the searched classloaders. If no results are found, the resource
      * name is prepended by '/' and tried again.
-     *
+     * <p>
      * This method will try to load the resources using the following methods
      * (in order):
      * <ul>
@@ -43,49 +38,45 @@ public class ClassLoaderUtil {
      * <li>callingClass.getClassLoader()
      * </ul>
      *
-     * @param resourceName
-     *            : The name of the resources to load
-     * @param callingClass
-     *            : The Class object of the calling object
-     * @param aggregate
-     *            : Whether to aggregate resources or not
+     * @param resourceName : The name of the resources to load
+     * @param callingClass : The Class object of the calling object
+     * @param aggregate    : Whether to aggregate resources or not
      * @return URL iterator
-     * @throws IOException
-     *             : if resource is inaccessible
+     * @throws IOException : if resource is inaccessible
      */
     public static Iterator<URL> getResources(String resourceName,
-	    Class<?> callingClass, boolean aggregate) throws IOException {
+                                             Class<?> callingClass, boolean aggregate) throws IOException {
 
-	AggregateIterator<URL> iterator = new AggregateIterator<URL>();
+        AggregateIterator<URL> iterator = new AggregateIterator<URL>();
 
-	iterator.addEnumeration(Thread.currentThread().getContextClassLoader()
-		.getResources(resourceName));
+        iterator.addEnumeration(Thread.currentThread().getContextClassLoader()
+                .getResources(resourceName));
 
-	if (!iterator.hasNext() || aggregate) {
-	    iterator.addEnumeration(ClassLoaderUtil.class.getClassLoader()
-		    .getResources(resourceName));
-	}
+        if (!iterator.hasNext() || aggregate) {
+            iterator.addEnumeration(ClassLoaderUtil.class.getClassLoader()
+                    .getResources(resourceName));
+        }
 
-	if (!iterator.hasNext() || aggregate) {
-	    ClassLoader cl = callingClass.getClassLoader();
+        if (!iterator.hasNext() || aggregate) {
+            ClassLoader cl = callingClass.getClassLoader();
 
-	    if (cl != null) {
-		iterator.addEnumeration(cl.getResources(resourceName));
-	    }
-	}
+            if (cl != null) {
+                iterator.addEnumeration(cl.getResources(resourceName));
+            }
+        }
 
-	if (!iterator.hasNext() && (resourceName != null)
-		&& ((resourceName.length() == 0)
-			|| (resourceName.charAt(0) != '/'))) {
-	    return getResources('/' + resourceName, callingClass, aggregate);
-	}
+        if (!iterator.hasNext() && (resourceName != null)
+                && ((resourceName.length() == 0)
+                || (resourceName.charAt(0) != '/'))) {
+            return getResources('/' + resourceName, callingClass, aggregate);
+        }
 
-	return iterator;
+        return iterator;
     }
 
     /**
      * Load a given resource.
-     *
+     * <p>
      * This method will try to load the resource using the following methods (in
      * order):
      * <ul>
@@ -94,64 +85,60 @@ public class ClassLoaderUtil {
      * <li>callingClass.getClassLoader()
      * </ul>
      *
-     * @param resourceName
-     *            The name IllegalStateException("Unable to call ")of the
-     *            resource to load
-     * @param callingClass
-     *            The Class object of the calling object
+     * @param resourceName The name IllegalStateException("Unable to call ")of the
+     *                     resource to load
+     * @param callingClass The Class object of the calling object
      * @return URL as resource
      */
     public static URL getResource(String resourceName, Class<?> callingClass) {
-	URL url = Thread.currentThread().getContextClassLoader()
-		.getResource(resourceName);
+        URL url = Thread.currentThread().getContextClassLoader()
+                .getResource(resourceName);
 
-	if (url == null) {
-	    url = ClassLoaderUtil.class.getClassLoader()
-		    .getResource(resourceName);
-	}
+        if (url == null) {
+            url = ClassLoaderUtil.class.getClassLoader()
+                    .getResource(resourceName);
+        }
 
-	if (url == null) {
-	    ClassLoader cl = callingClass.getClassLoader();
+        if (url == null) {
+            ClassLoader cl = callingClass.getClassLoader();
 
-	    if (cl != null) {
-		url = cl.getResource(resourceName);
-	    }
-	}
+            if (cl != null) {
+                url = cl.getResource(resourceName);
+            }
+        }
 
-	if ((url == null) && (resourceName != null)
-		&& ((resourceName.length() == 0)
-			|| (resourceName.charAt(0) != '/'))) {
-	    return getResource('/' + resourceName, callingClass);
-	}
+        if ((url == null) && (resourceName != null)
+                && ((resourceName.length() == 0)
+                || (resourceName.charAt(0) != '/'))) {
+            return getResource('/' + resourceName, callingClass);
+        }
 
-	return url;
+        return url;
     }
 
     /**
      * This is a convenience method to load a resource as a stream.
-     *
+     * <p>
      * The algorithm used to find the resource is given in getResource()
      *
-     * @param resourceName
-     *            The name of the resource to load
-     * @param callingClass
-     *            The Class object of the calling object
+     * @param resourceName The name of the resource to load
+     * @param callingClass The Class object of the calling object
      * @return InputStream object
      */
     public static InputStream getResourceAsStream(String resourceName,
-	    Class<?> callingClass) {
-	URL url = getResource(resourceName, callingClass);
+                                                  Class<?> callingClass) {
+        URL url = getResource(resourceName, callingClass);
 
-	try {
-	    return (url != null) ? url.openStream() : null;
-	} catch (IOException e) {
-	    return null;
-	}
+        try {
+            return (url != null) ? url.openStream() : null;
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     /**
      * Load a class with a given name.
-     *
+     * <p>
      * It will try to load the class in the following order:
      * <ul>
      * <li>From Thread.currentThread().getContextClassLoader()
@@ -160,48 +147,45 @@ public class ClassLoaderUtil {
      * <li>From the callingClass.getClassLoader()
      * </ul>
      *
-     * @param className
-     *            The name of the class to load
-     * @param callingClass
-     *            The Class object of the calling object
+     * @param className    The name of the class to load
+     * @param callingClass The Class object of the calling object
      * @return Class object of callingClass
-     * @throws ClassNotFoundException
-     *             If the class cannot be found anywhere.
+     * @throws ClassNotFoundException If the class cannot be found anywhere.
      */
     public static Class<?> loadClass(String className, Class<?> callingClass)
-	    throws ClassNotFoundException {
-	try {
-	    return Thread.currentThread().getContextClassLoader()
-		    .loadClass(className);
-	} catch (ClassNotFoundException e) {
-	    try {
-		return Class.forName(className);
-	    } catch (ClassNotFoundException ex) {
-		try {
-		    return ClassLoaderUtil.class.getClassLoader()
-			    .loadClass(className);
-		} catch (ClassNotFoundException exc) {
-		    return callingClass.getClassLoader().loadClass(className);
-		}
-	    }
-	}
+            throws ClassNotFoundException {
+        try {
+            return Thread.currentThread().getContextClassLoader()
+                    .loadClass(className);
+        } catch (ClassNotFoundException e) {
+            try {
+                return Class.forName(className);
+            } catch (ClassNotFoundException ex) {
+                try {
+                    return ClassLoaderUtil.class.getClassLoader()
+                            .loadClass(className);
+                } catch (ClassNotFoundException exc) {
+                    return callingClass.getClassLoader().loadClass(className);
+                }
+            }
+        }
     }
 
     /**
      * Searches for package in calling by its fully qualified name and loads
      * given class in it by name
-     * 
+     *
      * @param className
      * @param packageName
      * @param callingClass
-     * @return
+     * @return loaded Class object
      * @throws ClassNotFoundException
      */
     public static Class<?> loadClass(String className, String packageName,
-	    Class<?> callingClass) throws ClassNotFoundException {
-	String fullySpecifiedClassName = Package.getPackage(packageName)
-		.getName() + "." + className;
-	return loadClass(fullySpecifiedClassName, callingClass);
+                                     Class<?> callingClass) throws ClassNotFoundException {
+        String fullySpecifiedClassName = Package.getPackage(packageName)
+                .getName() + "." + className;
+        return loadClass(fullySpecifiedClassName, callingClass);
     }
 
     /**
@@ -211,73 +195,73 @@ public class ClassLoaderUtil {
      */
     static class AggregateIterator<E> implements Iterator<E> {
 
-	LinkedList<Enumeration<E>> enums = new LinkedList<Enumeration<E>>();
-	Enumeration<E> cur = null;
-	E next = null;
-	Set<E> loaded = new HashSet<E>();
+        LinkedList<Enumeration<E>> enums = new LinkedList<Enumeration<E>>();
+        Enumeration<E> cur = null;
+        E next = null;
+        Set<E> loaded = new HashSet<E>();
 
-	public AggregateIterator<E> addEnumeration(Enumeration<E> e) {
-	    if (e.hasMoreElements()) {
-		if (cur == null) {
-		    cur = e;
-		    next = e.nextElement();
-		    loaded.add(next);
-		} else {
-		    enums.add(e);
-		}
-	    }
-	    return this;
-	}
+        public AggregateIterator<E> addEnumeration(Enumeration<E> e) {
+            if (e.hasMoreElements()) {
+                if (cur == null) {
+                    cur = e;
+                    next = e.nextElement();
+                    loaded.add(next);
+                } else {
+                    enums.add(e);
+                }
+            }
+            return this;
+        }
 
-	@Override
-	public boolean hasNext() {
-	    return (next != null);
-	}
+        @Override
+        public boolean hasNext() {
+            return (next != null);
+        }
 
-	@Override
-	public E next() {
-	    if (next != null) {
-		E prev = next;
-		next = loadNext();
-		return prev;
-	    } else {
-		throw new NoSuchElementException();
-	    }
-	}
+        @Override
+        public E next() {
+            if (next != null) {
+                E prev = next;
+                next = loadNext();
+                return prev;
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
 
-	private Enumeration<E> determineCurrentEnumeration() {
-	    if (cur != null && !cur.hasMoreElements()) {
-		if (enums.size() > 0) {
-		    cur = enums.removeLast();
-		} else {
-		    cur = null;
-		}
-	    }
-	    return cur;
-	}
+        private Enumeration<E> determineCurrentEnumeration() {
+            if (cur != null && !cur.hasMoreElements()) {
+                if (enums.size() > 0) {
+                    cur = enums.removeLast();
+                } else {
+                    cur = null;
+                }
+            }
+            return cur;
+        }
 
-	private E loadNext() {
-	    if (determineCurrentEnumeration() != null) {
-		E tmp = cur.nextElement();
-		int loadedSize = loaded.size();
-		while (loaded.contains(tmp)) {
-		    tmp = loadNext();
-		    if (tmp == null || loaded.size() > loadedSize) {
-			break;
-		    }
-		}
-		if (tmp != null) {
-		    loaded.add(tmp);
-		}
-		return tmp;
-	    }
-	    return null;
+        private E loadNext() {
+            if (determineCurrentEnumeration() != null) {
+                E tmp = cur.nextElement();
+                int loadedSize = loaded.size();
+                while (loaded.contains(tmp)) {
+                    tmp = loadNext();
+                    if (tmp == null || loaded.size() > loadedSize) {
+                        break;
+                    }
+                }
+                if (tmp != null) {
+                    loaded.add(tmp);
+                }
+                return tmp;
+            }
+            return null;
 
-	}
+        }
 
-	@Override
-	public void remove() {
-	    throw new UnsupportedOperationException();
-	}
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
     }
 }

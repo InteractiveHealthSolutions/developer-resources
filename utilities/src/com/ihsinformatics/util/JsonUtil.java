@@ -15,56 +15,55 @@ import org.json.JSONObject;
 
 /**
  * This class reads and writes JSON objects/arrays
- * 
+ *
  * @author owais.hussain@ihsinformatics.com
- * 
  */
 public class JsonUtil {
     public static JSONObject getJSONObject(String jsonText) {
-	// try parse the string to a JSON object
-	try {
-	    JSONObject jsonObj = new JSONObject(jsonText);
-	    return jsonObj;
-	} catch (JSONException e) {
-	    e.printStackTrace();
-	    return null;
-	}
+        // try parse the string to a JSON object
+        try {
+            JSONObject jsonObj = new JSONObject(jsonText);
+            return jsonObj;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static JSONObject[] getJSONArrayFromObject(JSONObject jsonObj,
-	    String arrayElement) {
-	try {
-	    JSONArray jsonArray = jsonObj.getJSONArray(arrayElement);
-	    JSONObject[] jsonObjects = new JSONObject[jsonArray.length()];
-	    for (int i = 0; i < jsonArray.length(); i++) {
-		jsonObjects[i] = JsonUtil.getJSONObject(jsonArray.getString(i));
-	    }
-	    return jsonObjects;
-	} catch (JSONException e) {
-	    e.printStackTrace();
-	    return null;
-	}
+                                                      String arrayElement) {
+        try {
+            JSONArray jsonArray = jsonObj.getJSONArray(arrayElement);
+            JSONObject[] jsonObjects = new JSONObject[jsonArray.length()];
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObjects[i] = JsonUtil.getJSONObject(jsonArray.getString(i));
+            }
+            return jsonObjects;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static JSONObject getJsonError(String errorMessage) {
-	try {
-	    JSONObject jsonObj = new JSONObject();
-	    jsonObj.put("ERROR", errorMessage);
-	    return jsonObj;
-	} catch (JSONException e) {
-	    e.printStackTrace();
-	    return null;
-	}
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("ERROR", errorMessage);
+            return jsonObj;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static JSONObject getJsonMessage(String message) {
-	try {
-	    JSONObject jsonObj = new JSONObject();
-	    jsonObj.put("MESSAGE", message);
-	    return jsonObj;
-	} catch (JSONException e) {
-	    e.printStackTrace();
-	    return null;
-	}
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("MESSAGE", message);
+            return jsonObj;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

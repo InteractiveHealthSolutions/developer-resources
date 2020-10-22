@@ -19,9 +19,8 @@ import java.util.Map;
 
 /**
  * Utility class for several Date and Time functions
- * 
- * @author owais.hussain@ihsinformatics.com
  *
+ * @author owais.hussain@ihsinformatics.com
  */
 public class DateTimeUtil {
     @Deprecated
@@ -51,45 +50,45 @@ public class DateTimeUtil {
     private static final Map<String, String> DATE_FORMATS;
 
     static {
-	DATE_FORMATS = new HashMap<>();
-	// Time only
-	DATE_FORMATS.put("^[0-2]\\d[0-5]\\d$", "HHmm");
-	DATE_FORMATS.put("^[0-2]\\d:[0-5]\\d$", "HH:mm");
-	DATE_FORMATS.put("^[0-2]\\d([0-5]\\d){2}$", "HHmmss");
-	DATE_FORMATS.put("^[0-2]\\d:[0-5]\\d:[0-5]\\d$", "HH:mm:ss");
-	// Date only
-	DATE_FORMATS.put("^\\d{2}[0-1]\\d[0-3]\\d$", "yyMMdd");
-	DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d$", SQL_DATESTAMP);
-	DATE_FORMATS.put("^\\d{2}-[0-1]\\d-[0-3]\\d$", "yy-MM-dd");
-	DATE_FORMATS.put("^\\d{4}-[0-1]\\d-[0-3]\\d$", SQL_DATE);
-	DATE_FORMATS.put("^[0-3]\\d-[0-1]\\d-\\d{2}$", "dd-MM-yy");
-	DATE_FORMATS.put("^[0-3]\\d-[0-1]\\d-\\d{4}$",
-		STANDARD_DATE_HYPHENATED);
-	DATE_FORMATS.put("^[0-3]\\d [0-1]\\d \\d{2}$", "dd MM yy");
-	DATE_FORMATS.put("^[0-3]\\d [0-1]\\d \\d{4}$", "dd MM yyyy");
-	DATE_FORMATS.put("^[0-3]\\d/[0-1]\\d/\\d{2}$", "dd/MM/yy");
-	DATE_FORMATS.put("^[0-3]\\d/[0-1]\\d/\\d{4}$", STANDARD_DATE);
-	DATE_FORMATS.put("^[0-3]\\d [a-z]{3} \\d{2}$", "dd MMM yy");
-	DATE_FORMATS.put("^[0-3]\\d [a-z]{3} \\d{4}$", "dd MMM yyyy");
-	// Date and Time
-	DATE_FORMATS.put("^\\d{12,14}$", "tt");
-	DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d[0-2]\\d[0-5]\\d$",
-		"yyyyMMddHHmm");
-	DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d [0-2]\\d[0-5]\\d$",
-		"yyyyMMdd HHmm");
-	DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d[0-2]\\d([0-5]\\d){2}$",
-		SQL_TIMESTAMP);
-	DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d [0-2]\\d([0-5]\\d){2}$",
-		"yyyyMMdd HHmmss");
-	DATE_FORMATS.put("^\\d{4}-[0-1]\\d-[0-3]\\d [0-2]\\d:[0-5]\\d$",
-		"yyyy-MM-dd HH:mm");
-	DATE_FORMATS.put(
-		"^\\d{4}-[0-1]\\d-[0-3]\\d [0-2]\\d:[0-5]\\d:[0-5]\\d$",
-		SQL_DATETIME);
-	// ISO8601
-	DATE_FORMATS.put(
-		"^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}\\.\\d{2,4}$",
-		"yyyy-MM-dd HH:mm:ss.'Z'");
+        DATE_FORMATS = new HashMap<>();
+        // Time only
+        DATE_FORMATS.put("^[0-2]\\d[0-5]\\d$", "HHmm");
+        DATE_FORMATS.put("^[0-2]\\d:[0-5]\\d$", "HH:mm");
+        DATE_FORMATS.put("^[0-2]\\d([0-5]\\d){2}$", "HHmmss");
+        DATE_FORMATS.put("^[0-2]\\d:[0-5]\\d:[0-5]\\d$", "HH:mm:ss");
+        // Date only
+        DATE_FORMATS.put("^\\d{2}[0-1]\\d[0-3]\\d$", "yyMMdd");
+        DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d$", SQL_DATESTAMP);
+        DATE_FORMATS.put("^\\d{2}-[0-1]\\d-[0-3]\\d$", "yy-MM-dd");
+        DATE_FORMATS.put("^\\d{4}-[0-1]\\d-[0-3]\\d$", SQL_DATE);
+        DATE_FORMATS.put("^[0-3]\\d-[0-1]\\d-\\d{2}$", "dd-MM-yy");
+        DATE_FORMATS.put("^[0-3]\\d-[0-1]\\d-\\d{4}$",
+                STANDARD_DATE_HYPHENATED);
+        DATE_FORMATS.put("^[0-3]\\d [0-1]\\d \\d{2}$", "dd MM yy");
+        DATE_FORMATS.put("^[0-3]\\d [0-1]\\d \\d{4}$", "dd MM yyyy");
+        DATE_FORMATS.put("^[0-3]\\d/[0-1]\\d/\\d{2}$", "dd/MM/yy");
+        DATE_FORMATS.put("^[0-3]\\d/[0-1]\\d/\\d{4}$", STANDARD_DATE);
+        DATE_FORMATS.put("^[0-3]\\d [a-z]{3} \\d{2}$", "dd MMM yy");
+        DATE_FORMATS.put("^[0-3]\\d [a-z]{3} \\d{4}$", "dd MMM yyyy");
+        // Date and Time
+        DATE_FORMATS.put("^\\d{12,14}$", "tt");
+        DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d[0-2]\\d[0-5]\\d$",
+                "yyyyMMddHHmm");
+        DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d [0-2]\\d[0-5]\\d$",
+                "yyyyMMdd HHmm");
+        DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d[0-2]\\d([0-5]\\d){2}$",
+                SQL_TIMESTAMP);
+        DATE_FORMATS.put("^\\d{4}[0-1]\\d[0-3]\\d [0-2]\\d([0-5]\\d){2}$",
+                "yyyyMMdd HHmmss");
+        DATE_FORMATS.put("^\\d{4}-[0-1]\\d-[0-3]\\d [0-2]\\d:[0-5]\\d$",
+                "yyyy-MM-dd HH:mm");
+        DATE_FORMATS.put(
+                "^\\d{4}-[0-1]\\d-[0-3]\\d [0-2]\\d:[0-5]\\d:[0-5]\\d$",
+                SQL_DATETIME);
+        // ISO8601
+        DATE_FORMATS.put(
+                "^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}\\.\\d{2,4}$",
+                "yyyy-MM-dd HH:mm:ss.'Z'");
     }
 
     private DateTimeUtil() {
@@ -97,155 +96,142 @@ public class DateTimeUtil {
 
     @Deprecated
     public static Date getDateFromString(String string, String format)
-	    throws ParseException {
-	SimpleDateFormat sdf = new SimpleDateFormat(format);
-	return sdf.parse(string);
+            throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.parse(string);
     }
 
     @Deprecated
     public static String convertToSQL(String string, String format) {
-	SimpleDateFormat sdf = new SimpleDateFormat(format);
-	Date date1;
-	try {
-	    date1 = sdf.parse(string);
-	} catch (ParseException e) {
-	    e.printStackTrace();
-	    return null;
-	}
-	sdf.applyPattern(SQL_DATETIME);
-	return sdf.format(date1);
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        Date date1;
+        try {
+            date1 = sdf.parse(string);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+        sdf.applyPattern(SQL_DATETIME);
+        return sdf.format(date1);
     }
 
     @Deprecated
     public static String getSqlDate(Date date) {
-	SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATE);
-	return sdf.format(date);
+        SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATE);
+        return sdf.format(date);
     }
 
     @Deprecated
     public static String getSqlDateTime(Date date) {
-	SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATETIME);
-	return sdf.format(date);
+        SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATETIME);
+        return sdf.format(date);
     }
 
     public static Date fromString(String string, String format) {
-	if (string == null) {
-	    return null;
-	}
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
-	Date date;
-	try {
-	    date = simpleDateFormat.parse(string);
-	} catch (ParseException e) {
-	    try {
-		simpleDateFormat = new SimpleDateFormat(
-			detectDateFormat(string));
-		date = simpleDateFormat.parse(string);
-	    } catch (ParseException e2) {
-		e2.printStackTrace();
-		return null;
-	    }
-	}
-	return date;
+        if (string == null) {
+            return null;
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        Date date;
+        try {
+            date = simpleDateFormat.parse(string);
+        } catch (ParseException e) {
+            try {
+                simpleDateFormat = new SimpleDateFormat(
+                        detectDateFormat(string));
+                date = simpleDateFormat.parse(string);
+            } catch (ParseException e2) {
+                e2.printStackTrace();
+                return null;
+            }
+        }
+        return date;
     }
 
     public static String toString(Date date, String format) {
-	if (date == null) {
-	    return null;
-	}
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
-	return simpleDateFormat.format(date);
+        if (date == null) {
+            return null;
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        return simpleDateFormat.format(date);
     }
 
     public static Date fromSqlDateString(String sqlDate) {
-	return fromString(sqlDate, SQL_DATE);
+        return fromString(sqlDate, SQL_DATE);
     }
 
     public static Date fromSqlDateTimeString(String sqlDate) {
-	return fromString(sqlDate, SQL_DATETIME);
+        return fromString(sqlDate, SQL_DATETIME);
     }
 
     public static String toSqlDateString(Date date) {
-	return toString(date, SQL_DATE);
+        return toString(date, SQL_DATE);
     }
 
     public static String toSqlDateTimeString(Date date) {
-	return toString(date, SQL_DATETIME);
+        return toString(date, SQL_DATETIME);
     }
 
     /**
      * Returns closest matching date format from given date in string
-     * 
+     *
      * @param dateString
-     * @return
      */
     public static String detectDateFormat(String dateString) {
-	for (String regexp : DATE_FORMATS.keySet()) {
-	    if (dateString.toLowerCase().matches(regexp)) {
-		return DATE_FORMATS.get(regexp);
-	    }
-	}
-	throw new InvalidParameterException(
-		"Given date does not match any of the standard conventions.");
+        for (String regexp : DATE_FORMATS.keySet()) {
+            if (dateString.toLowerCase().matches(regexp)) {
+                return DATE_FORMATS.get(regexp);
+            }
+        }
+        throw new InvalidParameterException(
+                "Given date does not match any of the standard conventions.");
     }
 
     /**
      * Returns current date, like 2018
-     * 
-     * @return
      */
     @SuppressWarnings("deprecation")
     public static final int YEAR() {
-	return new Date().getYear() + 1900;
+        return new Date().getYear() + 1900;
     }
 
     /**
      * Returns current month number (from 1 to 12)
-     * 
-     * @return
      */
     @SuppressWarnings("deprecation")
     public static final int MONTH() {
-	return new Date().getMonth() + 1;
+        return new Date().getMonth() + 1;
     }
 
     /**
      * Returns full name of current month
-     * 
-     * @return
      */
     @SuppressWarnings("deprecation")
     public static final String MONTH_NAME() {
-	return new DateFormatSymbols().getMonths()[new Date().getMonth()];
+        return new DateFormatSymbols().getMonths()[new Date().getMonth()];
     }
 
     /**
      * Returns current date
-     * 
-     * @return
      */
     @SuppressWarnings("deprecation")
     public static final int DATE() {
-	return new Date().getDate();
+        return new Date().getDate();
     }
 
     /**
      * Returns the number of current day of week
-     * 
-     * @return
      */
     @SuppressWarnings("deprecation")
     public static final int WEEKDAY() {
-	return new Date().getDay() + 1;
+        return new Date().getDay() + 1;
     }
 
     /**
      * Returns full name of current day of week
-     * 
-     * @return
      */
     @SuppressWarnings("deprecation")
     public static final String WEEKDAY_NAME() {
-	return new DateFormatSymbols().getWeekdays()[new Date().getDay() + 1];
+        return new DateFormatSymbols().getWeekdays()[new Date().getDay() + 1];
     }
 }

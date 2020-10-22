@@ -18,9 +18,8 @@ import java.util.Random;
 /**
  * This class contains several methods for String manupulation that are not
  * available in built in libraries
- * 
- * @author owais.hussain@ihsinformatics.com
  *
+ * @author owais.hussain@ihsinformatics.com
  */
 public class StringUtil {
 
@@ -29,98 +28,91 @@ public class StringUtil {
 
     /**
      * Concatenates an array of Strings into single string
-     * 
+     *
      * @param array
-     * @param separator
-     *            the string to be inserted between two concatenations, passing
-     *            null or empty string will insert nothing
-     * @return
+     * @param separator the string to be inserted between two concatenations, passing
+     *                  null or empty string will insert nothing
+     * @return concatenated string object
      */
     public static String concatenate(String[] array, String separator) {
-	StringBuffer string = new StringBuffer();
-	for (String s : array) {
-	    string.append(s);
-	    string.append(separator == null ? "" : separator);
-	}
-	return string.toString();
+        StringBuffer string = new StringBuffer();
+        for (String s : array) {
+            string.append(s);
+            string.append(separator == null ? "" : separator);
+        }
+        return string.toString();
     }
 
     /**
      * Generates a random string of given length
-     * 
+     *
      * @param length
-     * @param numeric
-     *            : when true, 0-9 will be included in the string
-     * @param alpha
-     *            : when true, A-Z will be included in the string
-     * @param caseSensitive
-     *            : when true, A-Z and a-z will be included in the string
-     * @return
+     * @param numeric       : when true, 0-9 will be included in the string
+     * @param alpha         : when true, A-Z will be included in the string
+     * @param caseSensitive : when true, A-Z and a-z will be included in the string
+     * @return randomly generated string object
      */
     public String randomString(int length, boolean numeric, boolean alpha,
-	    boolean caseSensitive) {
-	String characters = "";
-	if (numeric) {
-	    characters = "0123456789";
-	}
-	if (alpha) {
-	    characters += "ACEFGHIJKLOQRSTUVWXYZ";
-	    if (caseSensitive) {
-		characters += "acefghijkloqrstuvwxyz";
-	    }
-	}
-	Random rand = new Random();
-	char[] text = new char[length];
-	for (int i = 0; i < length; i++) {
-	    text[i] = characters.charAt(rand.nextInt(characters.length()));
-	}
-	return new String(text);
+                               boolean caseSensitive) {
+        String characters = "";
+        if (numeric) {
+            characters = "0123456789";
+        }
+        if (alpha) {
+            characters += "ACEFGHIJKLOQRSTUVWXYZ";
+            if (caseSensitive) {
+                characters += "acefghijkloqrstuvwxyz";
+            }
+        }
+        Random rand = new Random();
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++) {
+            text[i] = characters.charAt(rand.nextInt(characters.length()));
+        }
+        return new String(text);
     }
 
     /**
      * Generates all combinations of a given string, of given length and stores
      * in output file
-     * 
-     * @param str
-     *            : the string to generate combinations for
-     * @param length
-     *            : desired length of combinations
-     * @param output
-     *            : file to write combinations to
+     *
+     * @param str    : the string to generate combinations for
+     * @param length : desired length of combinations
+     * @param output : file to write combinations to
      * @throws IOException
      */
     public void stringCombinations(String str, int length, File output)
-	    throws IOException {
-	short bufferSize = 10000;
-	long n = 0;
-	ArrayList<String> list = new ArrayList<String>(bufferSize);
-	FileWriter writer = new FileWriter(output);
-	int total = ((Double) Math.pow(2, str.length())).intValue() - 1;
-	for (int i = 0; i < total; i++) {
-	    String combination = "";
-	    char[] charArray = new StringBuilder(Integer.toBinaryString(i))
-		    .toString().toCharArray();
-	    for (int j = 0; j < charArray.length; j++)
-		if (charArray[j] == '0')
-		    combination += str.charAt(j);
-	    if (combination.length() == length) {
-		list.add(combination);
-		n++;
-	    }
-	    // System.out.print(combination + " ");
-	    if (list.size() == bufferSize) {
-		System.out.println("Generated " + n + " combinations...");
-		for (String s : list) {
-		    writer.write(s + "\r\n");
-		}
-		writer.flush();
-		list = new ArrayList<String>();
-	    }
-	}
-	for (String s : list) {
-	    writer.write(s + "\r\n");
-	}
-	writer.flush();
-	writer.close();
+            throws IOException {
+        short bufferSize = 10000;
+        long n = 0;
+        ArrayList<String> list = new ArrayList<String>(bufferSize);
+        FileWriter writer = new FileWriter(output);
+        int total = ((Double) Math.pow(2, str.length())).intValue() - 1;
+        for (int i = 0; i < total; i++) {
+            String combination = "";
+            char[] charArray = new StringBuilder(Integer.toBinaryString(i))
+                    .toString().toCharArray();
+            for (int j = 0; j < charArray.length; j++)
+                if (charArray[j] == '0')
+                    combination += str.charAt(j);
+            if (combination.length() == length) {
+                list.add(combination);
+                n++;
+            }
+            // System.out.print(combination + " ");
+            if (list.size() == bufferSize) {
+                System.out.println("Generated " + n + " combinations...");
+                for (String s : list) {
+                    writer.write(s + "\r\n");
+                }
+                writer.flush();
+                list = new ArrayList<String>();
+            }
+        }
+        for (String s : list) {
+            writer.write(s + "\r\n");
+        }
+        writer.flush();
+        writer.close();
     }
 }

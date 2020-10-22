@@ -11,7 +11,6 @@ package com.ihsinformatics.util;
 
 /**
  * @author owais
- * 
  */
 public enum CommandType {
     ALTER, BACKUP, CREATE, DELETE, DROP, EXECUTE, GRANT, INSERT, LOCK, SELECT, TRUNCATE, UPDATE, USE
