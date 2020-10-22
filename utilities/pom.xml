@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ihsinformatics</groupId>
 	<artifactId>utilities</artifactId>
-	<version>1.6.5-SNAPSHOT</version>
+	<version>1.6.4-SNAPSHOT</version>
 	<name>Common Utilities</name>
 	<description>Common programming utility classes</description>
 	<url>http://www.ihsinformatics.com</url>
